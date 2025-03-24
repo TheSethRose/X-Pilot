@@ -1,0 +1,65 @@
+# Python virtual environment
+venv/
+env/
+ENV/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Environment variables
+.env
+.env.*
+!.env.sample
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Log files
+logs/
+*.log
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# Unit test / pytest
+.pytest_cache/
+
+# Flask instance folder
+instance/
+
+# Mac files
+.DS_Store
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Project Specific
+.cursor/
+generate.py
+output.md
