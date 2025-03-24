@@ -235,31 +235,24 @@ def check_token_status(user):
                 "created_at": datetime.utcnow().strftime('%B %d, %Y')
             }
 
-        # Try to make a simple API call
-        api_client = TwitterOAuth.get_api_client(
-            user.access_token,
-            user.access_token_secret
-        )
+        # In free tier, we can't make API calls to verify tokens, but if the user
+        # is logged in successfully, we can assume the tokens are valid
 
-        # Check if api_client is None
-        if api_client is None:
+        # Check if tokens exist and aren't obviously invalid
+        if user.access_token and user.access_token_secret:
+            return {
+                "valid": True,
+                "message": "Tokens exist and user is logged in. Free tier doesn't allow detailed token validation.",
+                "created_at": user.last_login.strftime('%B %d, %Y')
+            }
+        else:
             return {
                 "valid": False,
-                "message": "Failed to create API client. Check your Twitter API credentials."
+                "message": "Tokens appear to be missing or invalid."
             }
-
-        # Get the user's own info as a test
-        user_info = api_client.get_user(username=user.username)
-
-        # If we got here, the tokens are valid
-        return {
-            "valid": True,
-            "message": "Tokens are valid and working correctly.",
-            "created_at": user.last_login.strftime('%B %d, %Y')
-        }
 
     except Exception as e:
         return {
             "valid": False,
-            "message": f"Tokens appear to be invalid: {str(e)}"
+            "message": f"Error checking token status: {str(e)}"
         }
