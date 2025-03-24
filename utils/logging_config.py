@@ -14,7 +14,7 @@ def setup_logging(app):
     """
     log_level_str = os.getenv('LOG_LEVEL', 'INFO')
     log_level = getattr(logging, log_level_str.upper(), logging.INFO)
-    log_file = os.getenv('LOG_FILE', 'logs/twikit.log')
+    log_file = os.getenv('LOG_FILE', 'logs/xpilot.log')
 
     # Ensure the log directory exists
     os.makedirs(os.path.dirname(log_file), exist_ok=True)

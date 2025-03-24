@@ -14,7 +14,13 @@ class TwitterOAuth:
     def is_simulation_enabled():
         """Check if simulation mode is enabled."""
         sim_value = os.getenv('SIMULATE_OAUTH', 'false').lower()
-        return sim_value == 'true' or sim_value == '1' or sim_value == 'yes'
+        enabled = sim_value == 'true' or sim_value == '1' or sim_value == 'yes'
+
+        # Print debug information
+        if hasattr(current_app, 'logger'):
+            current_app.logger.info(f"SIMULATE_OAUTH value: '{sim_value}', simulation enabled: {enabled}")
+
+        return enabled
 
     @staticmethod
     def get_oauth_handler(callback_url=None):

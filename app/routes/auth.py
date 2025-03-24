@@ -35,8 +35,13 @@ def twitter_authorize():
         # Directly redirect to the callback with a fake verifier
         return redirect(url_for('auth.twitter_callback') + '?oauth_verifier=fake_verifier')
 
-    # Get the authorization URL
-    auth_url = TwitterOAuth.get_authorization_url()
+    # Get the ngrok URL from app config
+    ngrok_base_url = current_app.config.get('SITE_URL', 'http://localhost:5000')
+    callback_url = f"{ngrok_base_url}/auth/twitter_callback"
+    current_app.logger.info(f"Using callback URL: {callback_url}")
+
+    # Get the authorization URL with explicit callback
+    auth_url = TwitterOAuth.get_authorization_url(callback_url=callback_url)
 
     if not auth_url:
         flash('Error connecting to Twitter API. Please check your credentials and try again.', 'error')
@@ -50,6 +55,10 @@ def twitter_authorize():
 def twitter_callback():
     """Handle callback from Twitter OAuth."""
     current_app.logger.info("Received callback from Twitter OAuth")
+
+    # Log all request parameters for debugging
+    current_app.logger.debug(f"Callback parameters: {request.args}")
+    current_app.logger.debug(f"Request token in session: {session.get('request_token')}")
 
     # Check for denied access - not applicable in simulation
     if not TwitterOAuth.is_simulation_enabled():
@@ -69,6 +78,9 @@ def twitter_callback():
     if not tokens:
         flash('Failed to obtain access tokens. Please try again.', 'error')
         return redirect(url_for('main.index'))
+
+    # Log success getting tokens
+    current_app.logger.info("Successfully obtained access tokens")
 
     # Get user info from Twitter
     user_info = TwitterOAuth.get_user_info(
@@ -228,6 +240,13 @@ def check_token_status(user):
             user.access_token,
             user.access_token_secret
         )
+
+        # Check if api_client is None
+        if api_client is None:
+            return {
+                "valid": False,
+                "message": "Failed to create API client. Check your Twitter API credentials."
+            }
 
         # Get the user's own info as a test
         user_info = api_client.get_user(username=user.username)

@@ -3,12 +3,18 @@ from flask import Flask, render_template
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
+import logging
+from logging.handlers import RotatingFileHandler
+from dotenv import load_dotenv
 
-from app.models import db
+from app.models import db, User
 from utils.logging_config import setup_logging
 
 def create_app(test_config=None):
     """Create and configure the Flask application using the factory pattern."""
+    # Load .env file explicitly
+    load_dotenv()
+
     # Use absolute path for template and static folders
     template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
     static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
@@ -18,6 +24,10 @@ def create_app(test_config=None):
                 template_folder=template_dir,
                 static_folder=static_dir)
 
+    # Configure session to work with ngrok
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
+
     # Load the default configuration
     app.config.from_mapping(
         SECRET_KEY=os.getenv('SECRET_KEY', 'dev'),
@@ -26,7 +36,8 @@ def create_app(test_config=None):
         TWITTER_CONSUMER_KEY=os.getenv('CONSUMER_KEY'),
         TWITTER_CONSUMER_SECRET=os.getenv('CONSUMER_SECRET'),
         TWITTER_ACCESS_TOKEN=os.getenv('ACCESS_TOKEN'),
-        TWITTER_ACCESS_TOKEN_SECRET=os.getenv('ACCESS_TOKEN_SECRET')
+        TWITTER_ACCESS_TOKEN_SECRET=os.getenv('ACCESS_TOKEN_SECRET'),
+        SITE_URL=os.getenv('SITE_URL', 'http://localhost:5000')
     )
 
     if test_config is None:
@@ -56,7 +67,6 @@ def create_app(test_config=None):
 
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models import User
         return User.query.get(int(user_id))
 
     # Setup logging
@@ -75,7 +85,6 @@ def create_app(test_config=None):
         app.register_blueprint(users_bp)
     except ImportError as e:
         app.logger.warning(f"Could not import blueprints: {e}")
-        app.logger.warning("Continuing without all blueprints...")
 
     # Register error handlers
     @app.errorhandler(404)
@@ -85,5 +94,11 @@ def create_app(test_config=None):
     @app.errorhandler(500)
     def internal_server_error(e):
         return render_template('errors/500.html'), 500
+
+    # Add support for ngrok by automatically setting the ngrok-skip-browser-warning header
+    @app.after_request
+    def add_ngrok_headers(response):
+        response.headers['ngrok-skip-browser-warning'] = '1'
+        return response
 
     return app

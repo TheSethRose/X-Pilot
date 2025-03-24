@@ -15,4 +15,4 @@ if __name__ == '__main__':
     parser.add_argument('--port', type=int, default=5000, help='Port to run the server on')
     args = parser.parse_args()
 
-    app.run(debug=True, port=args.port)
+    app.run(debug=True, host='127.0.0.1', port=args.port)
