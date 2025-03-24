@@ -6,6 +6,13 @@
 <div class="search-container">
     <h1>Search 𝕏 Users</h1>
 
+    {% if free_tier_message %}
+    <div class="alert alert-info">
+        <i class="info-icon"></i>
+        {{ free_tier_message }}
+    </div>
+    {% endif %}
+
     <div class="search-form">
         <form method="post" action="{{ url_for('users.search') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

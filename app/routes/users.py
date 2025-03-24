@@ -18,24 +18,75 @@ def profile():
         # Track this API call for quota
         quota_info = QuotaTracker.track_api_call(current_user.id, "profile")
 
-        # IMPORTANT: Free tier does not allow user lookups, so we'll always use simulated data
-        # or data from our database instead of making API calls
+        # We can access our own user information in the free tier
+        # Initialize with bearer token
+        bearer_token = os.environ.get('BEARER_TOKEN')
+
+        # Use data from our database initially, may be updated with API data
         profile_data = {
-            'following_count': 0,  # We'll use values from our database where possible
+            'following_count': 0,
             'followers_count': 0,
-            'tweet_count': 0,
+            'tweet_count': len(current_user.tweets) if current_user.tweets else 0,
             'created_at': current_user.last_login or datetime.utcnow(),
-            'description': "Profile data unavailable in free tier - this user data is from our local database.",
+            'description': f"Profile for @{current_user.username}",
             'username': current_user.username,
             'name': current_user.name,
             'profile_image_url': current_user.profile_image_url
         }
 
-        current_app.logger.info(f"Using local profile data for user {current_user.username}")
+        if not bearer_token:
+            current_app.logger.error("Missing BEARER_TOKEN in environment")
+            flash("Missing API credentials. Check your .env file.", "error")
+            return render_template('users/profile.html',
+                                  profile_data=profile_data,
+                                  quota_info=quota_info)
+
+        try:
+            # Try to get updated data from Twitter
+            import tweepy
+            client = tweepy.Client(bearer_token=bearer_token)
+
+            # This will fetch user data from Twitter, which should work in the free tier
+            current_app.logger.debug(f"Attempting to fetch user data for {current_user.username}")
+
+            # Following tweepy's client.get_user documentation format
+            user_data = client.get_user(
+                username=current_user.username,
+                user_fields=["description", "created_at", "profile_image_url", "public_metrics"]
+            )
+
+            # Log the response structure to debug
+            current_app.logger.debug(f"User data response: {user_data}")
+
+            # If we successfully got data, update our profile_data
+            if user_data and hasattr(user_data, 'data') and user_data.data:
+                user = user_data.data
+                current_app.logger.info(f"Successfully fetched profile data for {current_user.username}")
+
+                # Try to extract metrics if they exist
+                try:
+                    metrics = {}
+                    if hasattr(user, 'public_metrics'):
+                        metrics = user.public_metrics
+
+                    # Update profile data with real metrics from Twitter
+                    profile_data.update({
+                        'following_count': metrics.get('following_count', 0),
+                        'followers_count': metrics.get('followers_count', 0),
+                        'tweet_count': metrics.get('tweet_count', 0),
+                        'created_at': getattr(user, 'created_at', profile_data['created_at']),
+                        'description': getattr(user, 'description', profile_data['description'])
+                    })
+                except Exception as metrics_error:
+                    current_app.logger.error(f"Error extracting metrics: {metrics_error}")
+
+        except Exception as api_error:
+            current_app.logger.error(f"Error fetching profile from Twitter API: {str(api_error)}")
+            # We'll just use the database profile data initialized above
+
         return render_template('users/profile.html',
                               profile_data=profile_data,
-                              quota_info=quota_info,
-                              free_tier_message="Note: User profile data from X API is limited in the free tier.")
+                              quota_info=quota_info)
 
     except Exception as e:
         current_app.logger.error(f"Error preparing profile data: {str(e)}")
