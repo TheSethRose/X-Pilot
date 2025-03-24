@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}𝕏Pilot - Manage Your Twitter Account{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>𝕏Pilot</h1>
+    <p class="lead">Maximize your Twitter experience with the Free API tier</p>
+
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('main.dashboard') }}" class="btn">Go to Dashboard</a>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn">Get Started</a>
+    {% endif %}
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h2>Compose and Schedule</h2>
+        <p>Create tweets and schedule them for later posting. Manage your content calendar efficiently.</p>
+    </div>
+
+    <div class="feature-card">
+        <h2>Manage Relationships</h2>
+        <p>Follow, unfollow, and manage your Twitter connections with ease.</p>
+    </div>
+
+    <div class="feature-card">
+        <h2>Track Engagement</h2>
+        <p>Monitor engagement metrics and understand how your content performs.</p>
+    </div>
+
+    <div class="feature-card">
+        <h2>Stream Monitoring</h2>
+        <p>Set up filtered streams to monitor keywords and topics relevant to you.</p>
+    </div>
+</div>
+
+<div class="cta-section">
+    <h2>Start Managing Your Twitter Presence Today</h2>
+    <p>𝕏Pilot helps you make the most of Twitter's Free API tier.</p>
+
+    {% if not current_user.is_authenticated %}
+    <a href="{{ url_for('auth.login') }}" class="btn">Connect Your Account</a>
+    {% endif %}
+</div>
+{% endblock %}
