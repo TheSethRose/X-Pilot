@@ -1,34 +1,37 @@
 {% extends 'base.html' %}
 
-{% block title %}Your Profile - 𝕏-Pilot{% endblock %}
+{% block title %}{{ user.name }} (@{{ user.username }}) - 𝕏-Pilot{% endblock %}
 
 {% block content %}
 <div class="profile-container">
     <div class="profile-header">
         <div class="profile-image">
-            {% if current_user.profile_image_url %}
-            <img src="{{ current_user.profile_image_url }}" alt="{{ current_user.username }}" class="avatar">
+            {% if user.profile_image_url %}
+            <img src="{{ user.profile_image_url }}" alt="{{ user.username }}" class="avatar">
             {% else %}
-            <div class="avatar-placeholder">{{ current_user.username[0].upper() }}</div>
+            <div class="avatar-placeholder">{{ user.username[0].upper() }}</div>
             {% endif %}
         </div>
         <div class="profile-info">
-            <h1>{{ current_user.name }}</h1>
-            <p class="username">@{{ current_user.username }}</p>
-            {% if profile_data and profile_data.description %}
-            <p class="bio">{{ profile_data.description }}</p>
+            <h1>{{ user.name }}</h1>
+            <p class="username">@{{ user.username }}</p>
+            {% if user.verified %}
+            <span class="verified-badge">✓</span>
+            {% endif %}
+            {% if user.description %}
+            <p class="bio">{{ user.description }}</p>
             {% endif %}
             <div class="profile-stats">
                 <div class="stat">
-                    <span class="stat-value">{% if profile_data %}{{ profile_data.following_count }}{% else %}-{% endif %}</span>
+                    <span class="stat-value">{{ user.following_count }}</span>
                     <span class="stat-label">Following</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-value">{% if profile_data %}{{ profile_data.followers_count }}{% else %}-{% endif %}</span>
+                    <span class="stat-value">{{ user.followers_count }}</span>
                     <span class="stat-label">Followers</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-value">{% if profile_data %}{{ profile_data.tweet_count }}{% else %}{{ current_user.tweets|length }}{% endif %}</span>
+                    <span class="stat-value">{{ user.tweet_count }}</span>
                     <span class="stat-label">Tweets</span>
                 </div>
             </div>
@@ -36,24 +39,37 @@
     </div>
 
     <div class="profile-actions">
-        <a href="{{ url_for('tweets.compose') }}" class="btn">Compose Tweet</a>
+        {% if is_following %}
+        <form action="{{ url_for('users.unfollow', username=user.username) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-outline">Unfollow</button>
+        </form>
+        {% else %}
+        <form action="{{ url_for('users.follow', username=user.username) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn">Follow</button>
+        </form>
+        {% endif %}
+        <a href="https://twitter.com/{{ user.username }}" target="_blank" class="btn btn-outline">View on Twitter</a>
     </div>
 
     <div class="profile-sections">
         <div class="section">
-            <h2>Account Information</h2>
+            <h2>User Information</h2>
             <div class="account-details">
                 <div class="detail">
                     <span class="label">User ID:</span>
-                    <span class="value">{{ current_user.twitter_id }}</span>
+                    <span class="value">{{ user.id }}</span>
                 </div>
+                {% if user.location %}
+                <div class="detail">
+                    <span class="label">Location:</span>
+                    <span class="value">{{ user.location }}</span>
+                </div>
+                {% endif %}
                 <div class="detail">
                     <span class="label">Joined:</span>
-                    <span class="value">{% if profile_data and profile_data.created_at %}{{ profile_data.created_at.strftime('%B %d, %Y') }}{% elif current_user.created_at %}{{ current_user.created_at.strftime('%B %d, %Y') }}{% else %}Not available{% endif %}</span>
-                </div>
-                <div class="detail">
-                    <span class="label">Last Login:</span>
-                    <span class="value">{% if current_user.last_login %}{{ current_user.last_login.strftime('%B %d, %Y at %H:%M') }}{% else %}Not available{% endif %}</span>
+                    <span class="value">{{ user.created_at.strftime('%B %d, %Y') }}</span>
                 </div>
             </div>
         </div>
@@ -119,17 +135,31 @@
     .profile-info h1 {
         margin: 0;
         font-size: 1.8rem;
+        display: inline-block;
+    }
+
+    .verified-badge {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+        text-align: center;
+        line-height: 18px;
+        margin-left: 5px;
+    }
+
+    .username {
+        color: var(--dark-gray);
+        margin: 0.25rem 0 0.5rem;
     }
 
     .bio {
         margin: 0.5rem 0 1rem;
         font-size: 0.95rem;
         line-height: 1.4;
-    }
-
-    .username {
-        color: var(--dark-gray);
-        margin: 0.25rem 0 1rem;
     }
 
     .profile-stats {
@@ -154,6 +184,22 @@
 
     .profile-actions {
         margin-bottom: 2rem;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .profile-actions form {
+        display: inline;
+    }
+
+    .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-outline:hover {
+        background-color: rgba(29, 161, 242, 0.1);
     }
 
     .profile-sections {

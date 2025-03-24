@@ -1,6 +1,10 @@
 # 𝕏-Pilot
 
-A frontend interface for managing 𝕏 (𝕏) accounts within the limitations of the Free 𝕏 API tier, powered by Tweepy.
+A frontend interface for managing 𝕏 (Twitter) accounts within the limitations of the Free 𝕏 API tier, powered by Tweepy.
+
+## Screenshot
+
+![𝕏-Pilot Dashboard](static/img/homepage_screenshot.png)
 
 ## Features
 
@@ -91,6 +95,10 @@ X-Pilot/
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Author
+
+Created by [Seth Rose](https://twitter.com/TheSethRose). Visit [SethRose.dev](https://SethRose.dev) for more projects.
 
 ## Acknowledgements
 

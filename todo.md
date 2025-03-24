@@ -41,7 +41,7 @@ This document outlines all development tasks required to implement the features 
 - [x] Build authentication UI
   - [x] Create login screen
   - [x] Implement OAuth flow screens
-  - [ ] Build token management UI
+  - [x] Build token management UI
   - [ ] Create account switching functionality
   - [x] Implement session management
 
@@ -74,22 +74,22 @@ This document outlines all development tasks required to implement the features 
 
 ## Phase 3: User Profile Management (MVP)
 
-- [ ] Create user profile view
-  - [ ] Implement profile data retrieval
-  - [ ] Build profile UI with key metrics
-  - [ ] Show follower/following counts
-  - [ ] Display user verification status
+- [x] Create user profile view
+  - [x] Implement profile data retrieval
+  - [x] Build profile UI with key metrics
+  - [x] Show follower/following counts
+  - [x] Display user verification status
 
-- [ ] User lookup functionality
-  - [ ] Create user search interface
-  - [ ] Implement user lookup API client
-  - [ ] Build user profile card display
-  - [ ] Add error handling for non-existent users
+- [x] User lookup functionality
+  - [x] Create user search interface
+  - [x] Implement user lookup API client
+  - [x] Build user profile card display
+  - [x] Add error handling for non-existent users
 
-- [ ] Implement relationship management
-  - [ ] Create follow/unfollow button functionality
-  - [ ] Build followers/following list views
-  - [ ] Implement relationship status indicators
+- [x] Implement relationship management
+  - [x] Create follow/unfollow button functionality
+  - [x] Build followers/following list views
+  - [x] Implement relationship status indicators
   - [ ] Add pagination for large follow lists
 
 ## Phase 4: Basic UI Dashboard (MVP)
@@ -271,13 +271,13 @@ We've made significant progress on our initial goals:
 - ✓ Enhanced UI with better mobile support and dark mode
 - ✓ Implemented frontend animations and improved usability
 - ✓ Added quota tracking for 𝕏 API usage
+- ✓ Implemented user profile management
+- ✓ Built user search functionality
+- ✓ Enhanced token management UI
 
 Our next focus is on:
-1. Implement user profile management
-2. Enhance token management UI
-3. Build user search functionality
-4. Complete media upload functionality
-5. Implement reply, like, and retweet features
+1. Complete media upload functionality
+2. Implement reply, like, and retweet features
 
 ## Sprint Planning Template
 
@@ -312,10 +312,10 @@ Our next focus is on:
   - [x] Can delete tweets
   - [x] Quota tracker working
 
-- [ ] User Profile Viewing
-  - [ ] Can view own profile
-  - [ ] Can view followers/following
-  - [ ] Can follow/unfollow users
+- [x] User Profile Viewing
+  - [x] Can view own profile
+  - [x] Can view followers/following
+  - [x] Can follow/unfollow users
 
 - [x] Functional Dashboard
   - [x] Shows relevant metrics

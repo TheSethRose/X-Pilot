@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage API Tokens - 𝕏-Pilot{% endblock %}
+
+{% block content %}
+<div class="tokens-container">
+    <h1>Manage Twitter API Tokens</h1>
+
+    <div class="token-status-section">
+        <div class="status-card {% if token_status.valid %}status-valid{% else %}status-invalid{% endif %}">
+            <div class="status-header">
+                <h2>Token Status</h2>
+                <span class="status-indicator">
+                    {% if token_status.valid %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    {% endif %}
+                </span>
+            </div>
+            <p class="status-message">{{ token_status.message }}</p>
+            {% if token_status.valid and token_status.created_at %}
+                <p class="status-date">Last refreshed: {{ token_status.created_at }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="tokens-section">
+        <div class="section-card">
+            <h2>Your API Tokens</h2>
+            <p class="warning-text">These tokens are sensitive - never share them publicly!</p>
+
+            <div class="token-list">
+                <div class="token-item">
+                    <div class="token-label">Consumer Key:</div>
+                    <div class="token-value">{{ masked_consumer_key }}</div>
+                </div>
+                <div class="token-item">
+                    <div class="token-label">Consumer Secret:</div>
+                    <div class="token-value">{{ masked_consumer_secret }}</div>
+                </div>
+                <div class="token-item">
+                    <div class="token-label">Access Token:</div>
+                    <div class="token-value">{{ masked_access_token }}</div>
+                </div>
+                <div class="token-item">
+                    <div class="token-label">Access Token Secret:</div>
+                    <div class="token-value">{{ masked_access_token_secret }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="token-actions">
+        <form action="{{ url_for('auth.refresh_tokens') }}" method="post" class="action-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn">Refresh Tokens</button>
+            <p class="action-description">Re-authorize with Twitter to obtain new access tokens.</p>
+        </form>
+
+        <form action="{{ url_for('auth.revoke_tokens') }}" method="post" class="action-form" onsubmit="return confirm('Are you sure you want to revoke your tokens? You will be logged out and will need to re-authorize with Twitter.');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger">Revoke Access</button>
+            <p class="action-description">Revoke current tokens and remove access to your Twitter account.</p>
+        </form>
+    </div>
+
+    <div class="quota-section">
+        <div class="section-card">
+            <h2>API Usage</h2>
+            <div class="quota-status">
+                {% if quota_info %}
+                <div class="quota-bar">
+                    <div class="quota-progress" style="width: {{ (quota_info.posts_used / quota_info.monthly_limit * 100)|round }}%"></div>
+                </div>
+                <p>Monthly API usage: <strong>{{ quota_info.posts_used }}/{{ quota_info.monthly_limit }}</strong> posts</p>
+                <p class="quota-reset">Resets on: <strong>{{ quota_info.reset_date.strftime('%B %d, %Y') }}</strong></p>
+                {% else %}
+                <div class="quota-bar">
+                    <div class="quota-progress" style="width: 0%"></div>
+                </div>
+                <p>Monthly API usage: <strong>0/1500</strong> posts</p>
+                <p class="quota-reset">Resets on: <strong>Not available</strong></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tokens-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .tokens-container h1 {
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+    }
+
+    .section-card {
+        background-color: var(--very-light-gray);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-card h2 {
+        margin-top: 0;
+        color: var(--primary-color);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .token-status-section {
+        margin-bottom: 2rem;
+    }
+
+    .status-card {
+        border-radius: 8px;
+        padding: 1.5rem;
+    }
+
+    .status-valid {
+        background-color: rgba(40, 167, 69, 0.1);
+        border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    .status-invalid {
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    .status-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .status-header h2 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    .status-valid .status-indicator {
+        color: #28a745;
+    }
+
+    .status-invalid .status-indicator {
+        color: #dc3545;
+    }
+
+    .status-message {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .status-date {
+        margin: 0.5rem 0 0;
+        font-size: 0.9rem;
+        color: var(--dark-gray);
+    }
+
+    .warning-text {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .token-list {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .token-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background-color: var(--light-gray);
+        border-radius: 4px;
+    }
+
+    .token-label {
+        font-weight: bold;
+        min-width: 40%;
+    }
+
+    .token-value {
+        font-family: monospace;
+        background-color: #f8f9fa;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        flex-grow: 1;
+    }
+
+    .token-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .action-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .action-description {
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        color: var(--dark-gray);
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .quota-bar {
+        height: 10px;
+        background-color: var(--light-gray);
+        border-radius: 5px;
+        margin-bottom: 0.75rem;
+    }
+
+    .quota-progress {
+        height: 100%;
+        background-color: var(--primary-color);
+        border-radius: 5px;
+    }
+
+    .quota-reset {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 767px) {
+        .token-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

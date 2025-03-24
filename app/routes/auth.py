@@ -6,6 +6,7 @@ import os
 
 from app.models import db, User
 from utils.twitter_auth import TwitterOAuth
+from utils.quota_tracker import QuotaTracker
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -124,3 +125,122 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
+
+@auth_bp.route('/tokens', methods=['GET'])
+@login_required
+def manage_tokens():
+    """View and manage Twitter API tokens."""
+    # Track this as a profile view API call for quota
+    quota_info = QuotaTracker.track_api_call(current_user.id, "tokens")
+
+    # Mask tokens for display
+    masked_consumer_key = mask_token(current_user.consumer_key)
+    masked_consumer_secret = mask_token(current_user.consumer_secret)
+    masked_access_token = mask_token(current_user.access_token)
+    masked_access_token_secret = mask_token(current_user.access_token_secret)
+
+    # Check if tokens are working by making a simple API call
+    token_status = check_token_status(current_user)
+
+    return render_template(
+        'auth/tokens.html',
+        masked_consumer_key=masked_consumer_key,
+        masked_consumer_secret=masked_consumer_secret,
+        masked_access_token=masked_access_token,
+        masked_access_token_secret=masked_access_token_secret,
+        token_status=token_status,
+        quota_info=quota_info
+    )
+
+@auth_bp.route('/tokens/refresh', methods=['POST'])
+@login_required
+def refresh_tokens():
+    """Re-authorize with Twitter to refresh access tokens."""
+    # Record the user is refreshing tokens
+    current_app.logger.info(f"User {current_user.username} is refreshing their Twitter access tokens")
+
+    # Redirect to the Twitter authorization flow
+    # Use a special parameter to indicate this is a token refresh
+    session['is_token_refresh'] = True
+    return redirect(url_for('auth.twitter_authorize'))
+
+@auth_bp.route('/tokens/revoke', methods=['POST'])
+@login_required
+def revoke_tokens():
+    """Revoke the current access tokens."""
+    try:
+        # In a real implementation, we would call Twitter's API to revoke the token
+        # For now, we'll just clear them from our database
+
+        # Save old username for the flash message
+        username = current_user.username
+
+        # Clear tokens
+        current_user.access_token = None
+        current_user.access_token_secret = None
+        db.session.commit()
+
+        # Log action
+        current_app.logger.info(f"User {username} has revoked their Twitter access tokens")
+
+        # Log out the user since they can no longer use the app without tokens
+        logout_user()
+
+        flash("Your Twitter access has been revoked. You will need to log in again to use 𝕏-Pilot.", "info")
+        return redirect(url_for('main.index'))
+
+    except Exception as e:
+        flash(f"Error revoking tokens: {str(e)}", "error")
+        current_app.logger.error(f"Error revoking tokens for user {current_user.username}: {str(e)}")
+        return redirect(url_for('auth.manage_tokens'))
+
+# Helper functions for token management
+
+def mask_token(token):
+    """Mask a token for display purposes, showing only first and last 4 characters."""
+    if not token:
+        return "None"
+
+    if len(token) <= 8:
+        return "****"
+
+    return token[:4] + "..." + token[-4:]
+
+def check_token_status(user):
+    """Check if the user's tokens are valid and working."""
+    if not user.access_token or not user.access_token_secret:
+        return {
+            "valid": False,
+            "message": "No access tokens found."
+        }
+
+    try:
+        # For simulation mode, always return valid
+        if TwitterOAuth.is_simulation_enabled():
+            return {
+                "valid": True,
+                "message": "Tokens are valid (simulation mode)",
+                "created_at": datetime.utcnow().strftime('%B %d, %Y')
+            }
+
+        # Try to make a simple API call
+        api_client = TwitterOAuth.get_api_client(
+            user.access_token,
+            user.access_token_secret
+        )
+
+        # Get the user's own info as a test
+        user_info = api_client.get_user(username=user.username)
+
+        # If we got here, the tokens are valid
+        return {
+            "valid": True,
+            "message": "Tokens are valid and working correctly.",
+            "created_at": user.last_login.strftime('%B %d, %Y')
+        }
+
+    except Exception as e:
+        return {
+            "valid": False,
+            "message": f"Tokens appear to be invalid: {str(e)}"
+        }

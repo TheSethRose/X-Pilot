@@ -19,6 +19,8 @@
                 <li><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ url_for('tweets.index') }}">Tweets</a></li>
                 <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('users.search') }}">Search Users</a></li>
+                <li><a href="{{ url_for('auth.manage_tokens') }}">API Tokens</a></li>
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                 {% else %}
                 <li><a href="{{ url_for('auth.login') }}">Login</a></li>
@@ -47,7 +49,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; {{ now.year }} 𝕏-Pilot - A Tweepy Frontend</p>
+            <p>&copy; {{ now.year }} 𝕏-Pilot - A Tweepy Frontend | A project by <a href="https://twitter.com/TheSethRose" target="_blank">Seth Rose</a></p>
         </div>
     </footer>
 
