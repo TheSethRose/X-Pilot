@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'components/macros.html' import verified_badge %}
 
 {% block title %}{{ user.name }} (@{{ user.username }}) - 𝕏-Pilot{% endblock %}
 
@@ -16,7 +17,7 @@
             <h1>{{ user.name }}</h1>
             <p class="username">@{{ user.username }}</p>
             {% if user.verified %}
-            <span class="verified-badge">✓</span>
+                {{ verified_badge(user.verified_type) }}
             {% endif %}
             {% if user.description %}
             <p class="bio">{{ user.description }}</p>
@@ -31,8 +32,8 @@
                     <span class="stat-label">Followers</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-value">{{ user.tweet_count }}</span>
-                    <span class="stat-label">Tweets</span>
+                    <span class="stat-value">{{ user.post_count }}</span>
+                    <span class="stat-label">Posts</span>
                 </div>
             </div>
         </div>
@@ -129,37 +130,43 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.5rem;
+        font-size: var(--font-size-2xl);
     }
 
     .profile-info h1 {
         margin: 0;
-        font-size: 1.8rem;
+        font-size: var(--font-size-xl);
         display: inline-block;
     }
 
     .verified-badge {
-        display: inline-block;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        font-size: 12px;
-        text-align: center;
-        line-height: 18px;
-        margin-left: 5px;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .verified-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .verified-text {
+        color: var(--primary-color);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
     }
 
     .username {
         color: var(--dark-gray);
         margin: 0.25rem 0 0.5rem;
+        font-size: var(--font-size-sm);
     }
 
     .bio {
         margin: 0.5rem 0 1rem;
-        font-size: 0.95rem;
-        line-height: 1.4;
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-normal);
     }
 
     .profile-stats {
@@ -173,13 +180,13 @@
     }
 
     .stat-value {
-        font-weight: bold;
-        font-size: 1.2rem;
+        font-weight: var(--font-weight-bold);
+        font-size: var(--font-size-lg);
     }
 
     .stat-label {
         color: var(--dark-gray);
-        font-size: 0.9rem;
+        font-size: var(--font-size-sm);
     }
 
     .profile-actions {
@@ -217,7 +224,7 @@
     .section h2 {
         margin-top: 0;
         color: var(--primary-color);
-        font-size: 1.4rem;
+        font-size: var(--font-size-lg);
     }
 
     .account-details .detail {
@@ -226,7 +233,7 @@
     }
 
     .account-details .label {
-        font-weight: bold;
+        font-weight: var(--font-weight-bold);
         width: 100px;
     }
 
@@ -245,7 +252,7 @@
 
     .quota-reset {
         margin-top: 0.5rem;
-        font-size: 0.9rem;
+        font-size: var(--font-size-sm);
     }
 
     @media (min-width: 768px) {

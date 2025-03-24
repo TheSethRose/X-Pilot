@@ -40,9 +40,9 @@ def initialize_database():
     )
     ''')
 
-    # Create tweets table
+    # Create posts table
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS tweets (
+    CREATE TABLE IF NOT EXISTS posts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         twitter_id TEXT UNIQUE,
         user_id INTEGER NOT NULL,
@@ -74,8 +74,8 @@ def initialize_database():
     CREATE TABLE IF NOT EXISTS stream_results (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         stream_id INTEGER NOT NULL,
-        tweet_id TEXT NOT NULL,
-        tweet_text TEXT NOT NULL,
+        post_id TEXT NOT NULL,
+        post_text TEXT NOT NULL,
         author_id TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (stream_id) REFERENCES streams (id)

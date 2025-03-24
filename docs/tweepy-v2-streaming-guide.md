@@ -4,12 +4,12 @@ This guide covers how to use the streaming capabilities of Tweepy with the 𝕏 
 
 ## Introduction to 𝕏 API v2 Streaming
 
-Twitter API v2 offers filtered stream access, which allows you to receive tweets in real-time that match specific rules you define. Tweepy provides a convenient interface for working with these streams through the `StreamingClient` class.
+Twitter API v2 offers filtered stream access, which allows you to receive posts in real-time that match specific rules you define. Tweepy provides a convenient interface for working with these streams through the `StreamingClient` class.
 
 With the Free 𝕏 API Plan, you can:
 - Connect to the filtered stream endpoint
 - Define rules to filter the stream
-- Receive tweets matching your rules in real-time
+- Receive posts matching your rules in real-time
 
 ## Basic Streaming Setup
 
@@ -21,11 +21,11 @@ To work with the streaming API, you'll need to create a subclass of `tweepy.Stre
 import tweepy
 
 class MyStreamingClient(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        """Called when a tweet is received"""
-        print(f"Tweet ID: {tweet.id}")
-        print(f"Text: {tweet.text}")
-        print(f"Author ID: {tweet.author_id}")
+    def on_post(self, post):
+        """Called when a post is received"""
+        print(f"Post ID: {post.id}")
+        print(f"Text: {post.text}")
+        print(f"Author ID: {post.author_id}")
         print("---")
 
     def on_includes(self, includes):
@@ -62,7 +62,7 @@ streaming_client = MyStreamingClient("YOUR_BEARER_TOKEN")
 
 ## Managing Stream Rules
 
-Before starting a stream, you'll need to define rules that specify which tweets to receive. Rules are persistent and will stay active even when your connection is closed.
+Before starting a stream, you'll need to define rules that specify which posts to receive. Rules are persistent and will stay active even when your connection is closed.
 
 ### Adding Rules
 
@@ -143,8 +143,8 @@ else:
 import tweepy
 
 class MyStreamingClient(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        print(f"{tweet.id}: {tweet.text}")
+    def on_post(self, post):
+        print(f"{post.id}: {post.text}")
 
 # Initialize the client
 streaming_client = MyStreamingClient("YOUR_BEARER_TOKEN")
@@ -157,19 +157,19 @@ if not streaming_client.get_rules().data:
 streaming_client.filter()
 ```
 
-### Stream with Additional Tweet Fields
+### Stream with Additional Post Fields
 
 ```python
 import tweepy
 
 class MyStreamingClient(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        print(f"Tweet by {tweet.author_id}: {tweet.text}")
-        if hasattr(tweet, "created_at"):
-            print(f"Created at: {tweet.created_at}")
-        if hasattr(tweet, "public_metrics"):
-            metrics = tweet.public_metrics
-            print(f"Likes: {metrics['like_count']} | Retweets: {metrics['retweet_count']}")
+    def on_post(self, post):
+        print(f"Post by {post.author_id}: {post.text}")
+        if hasattr(post, "created_at"):
+            print(f"Created at: {post.created_at}")
+        if hasattr(post, "public_metrics"):
+            metrics = post.public_metrics
+            print(f"Likes: {metrics['like_count']} | Reposts: {metrics['repost_count']}")
         print("---")
 
 # Initialize the client
@@ -179,9 +179,9 @@ streaming_client = MyStreamingClient("YOUR_BEARER_TOKEN")
 if not streaming_client.get_rules().data:
     streaming_client.add_rules(tweepy.StreamRule("python"))
 
-# Start the stream with additional tweet fields
+# Start the stream with additional post fields
 streaming_client.filter(
-    tweet_fields=["created_at", "public_metrics", "source"],
+    post_fields=["created_at", "public_metrics", "source"],
     expansions=["author_id"],
     user_fields=["username", "verified"]
 )
@@ -193,8 +193,8 @@ streaming_client.filter(
 import tweepy
 
 class MyStreamingClient(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        print(f"Tweet: {tweet.text}")
+    def on_post(self, post):
+        print(f"Post: {post.text}")
 
     def on_includes(self, includes):
         if "users" in includes:
@@ -231,8 +231,8 @@ import tweepy
 import threading
 
 class MyStreamingClient(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        print(f"Tweet received: {tweet.text}")
+    def on_post(self, post):
+        print(f"Post received: {post.text}")
 
     def on_exception(self, exception):
         print(f"Error: {exception}")
@@ -270,8 +270,8 @@ class MyStreamingClient(tweepy.StreamingClient):
         self.retry_delay = retry_delay
         self.retries = 0
 
-    def on_tweet(self, tweet):
-        print(f"Tweet: {tweet.text}")
+    def on_post(self, post):
+        print(f"Post: {post.text}")
 
     def on_connection_error(self):
         if self.retries < self.max_retries:
@@ -301,7 +301,7 @@ if not streaming_client.get_rules().data:
 streaming_client.filter()
 ```
 
-### Processing Tweets with Queue
+### Processing Posts with Queue
 
 ```python
 import tweepy
@@ -309,36 +309,36 @@ import threading
 import queue
 import time
 
-# Create a queue for tweet processing
-tweet_queue = queue.Queue()
+# Create a queue for post processing
+post_queue = queue.Queue()
 
 class MyStreamingClient(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
+    def on_post(self, post):
         # Instead of processing here, add to queue
-        tweet_queue.put(tweet)
+        post_queue.put(post)
 
-# Function to process tweets from the queue
-def process_tweets():
+# Function to process posts from the queue
+def process_posts():
     while True:
         try:
-            # Get a tweet from the queue
-            tweet = tweet_queue.get(timeout=60)
+            # Get a post from the queue
+            post = post_queue.get(timeout=60)
 
-            # Process the tweet
-            print(f"Processing tweet: {tweet.id}")
-            print(f"Text: {tweet.text}")
+            # Process the post
+            print(f"Processing post: {post.id}")
+            print(f"Text: {post.text}")
 
             # Simulate processing time
             time.sleep(0.5)
 
             # Mark the task as done
-            tweet_queue.task_done()
+            post_queue.task_done()
 
         except queue.Empty:
-            print("No tweets received for 60 seconds")
+            print("No posts received for 60 seconds")
             continue
         except Exception as e:
-            print(f"Error processing tweet: {e}")
+            print(f"Error processing post: {e}")
             continue
 
 # Initialize the streaming client
@@ -348,8 +348,8 @@ streaming_client = MyStreamingClient("YOUR_BEARER_TOKEN")
 if not streaming_client.get_rules().data:
     streaming_client.add_rules(tweepy.StreamRule("python"))
 
-# Start the tweet processing thread
-processing_thread = threading.Thread(target=process_tweets)
+# Start the post processing thread
+processing_thread = threading.Thread(target=process_posts)
 processing_thread.daemon = True
 processing_thread.start()
 
@@ -359,7 +359,7 @@ streaming_client.filter()
 
 ## Stream Rules Syntax
 
-Twitter API v2 streams use a powerful rule syntax for filtering tweets. Here are some examples:
+Twitter API v2 streams use a powerful rule syntax for filtering posts. Here are some examples:
 
 ### Basic Operators
 
@@ -396,17 +396,17 @@ rules = [
     # To a specific user
     tweepy.StreamRule("to:TwitterDev", tag="to-twitter-dev"),
 
-    # Tweets containing a URL
+    # Posts containing a URL
     tweepy.StreamRule("url:github", tag="github-links"),
 
-    # Tweets with hashtag
+    # Posts with hashtag
     tweepy.StreamRule("#python", tag="python-hashtag"),
 
-    # Tweets with media
+    # Posts with media
     tweepy.StreamRule("has:media python", tag="python-with-media"),
 
-    # Retweets
-    tweepy.StreamRule("is:retweet python", tag="python-retweets"),
+    # Reposts
+    tweepy.StreamRule("is:repost python", tag="python-reposts"),
 
     # Complex combination
     tweepy.StreamRule('python (flask OR django) -"web scraping" has:links', tag="python-web-frameworks-with-links")

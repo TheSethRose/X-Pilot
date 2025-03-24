@@ -1,0 +1,28 @@
+{% macro verified_badge(verified_type=None, compact=False) -%}
+    <span class="verified-badge {% if compact %}compact{% endif %}">
+        <img src="{{ url_for('static', filename='img/verified.svg') }}" alt="Verified" class="verified-icon">
+        <span class="verified-text">
+            {% if verified_type %}
+                {% if verified_type == "blue" %}
+                    Verified
+                {% else %}
+                    {{ verified_type }}
+                {% endif %}
+            {% else %}
+                Verified
+            {% endif %}
+        </span>
+    </span>
+{%- endmacro %}
+
+{% macro status_tag(verified_type=None) -%}
+    {% if verified_type %}
+        {% if verified_type == "blue" %}
+            <span class="status-tag verified">Verified</span>
+        {% else %}
+            <span class="status-tag verified">{{ verified_type }}</span>
+        {% endif %}
+    {% else %}
+        <span class="status-tag verified">𝕏 Premium</span>
+    {% endif %}
+{%- endmacro %}

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'components/macros.html' import verified_badge, status_tag %}
 
 {% block title %}Your Profile - 𝕏-Pilot{% endblock %}
 
@@ -17,13 +18,7 @@
             <p class="username">
                 @{{ current_user.username }}
                 {% if profile_data and (profile_data.verified or profile_data.verified_type) %}
-                <span class="premium-badge">
-                    {% if profile_data.verified_type %}
-                        {{ profile_data.verified_type }}
-                    {% else %}
-                        𝕏 Premium
-                    {% endif %}
-                </span>
+                    {{ verified_badge(profile_data.verified_type) }}
                 {% endif %}
             </p>
             {% if profile_data and profile_data.description %}
@@ -39,15 +34,15 @@
                     <span class="stat-label">Followers</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-value">{% if profile_data %}{{ profile_data.tweet_count }}{% else %}{{ current_user.tweets|length }}{% endif %}</span>
-                    <span class="stat-label">Tweets</span>
+                    <span class="stat-value">{% if profile_data %}{{ profile_data.post_count }}{% else %}{{ current_user.posts|length }}{% endif %}</span>
+                    <span class="stat-label">Posts</span>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="profile-actions">
-        <a href="{{ url_for('tweets.compose') }}" class="btn">Compose Tweet</a>
+        <a href="{{ url_for('posts.compose') }}" class="btn">Compose Post</a>
     </div>
 
     <div class="profile-sections">
@@ -70,11 +65,7 @@
                     <span class="label">Status:</span>
                     <span class="value">
                         {% if profile_data and profile_data.verified %}
-                            {% if profile_data.verified_type %}
-                                <span class="status-tag verified">{{ profile_data.verified_type }}</span>
-                            {% else %}
-                                <span class="status-tag verified">𝕏 Premium</span>
-                            {% endif %}
+                            {{ status_tag(profile_data.verified_type) }}
                         {% else %}
                             <span class="status-tag">Standard Account</span>
                         {% endif %}
@@ -138,18 +129,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.5rem;
+        font-size: var(--font-size-2xl);
     }
 
     .profile-info h1 {
         margin: 0;
-        font-size: 1.8rem;
+        font-size: var(--font-size-xl);
     }
 
     .bio {
         margin: 0.5rem 0 1rem;
-        font-size: 0.95rem;
-        line-height: 1.4;
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-normal);
     }
 
     .username {
@@ -158,18 +149,25 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        font-size: var(--font-size-sm);
     }
 
-    .premium-badge {
-        background-color: #f7c427;
-        color: #333;
-        font-size: 0.7rem;
-        font-weight: bold;
-        padding: 0.2rem 0.4rem;
-        border-radius: 4px;
-        display: inline-flex;
+    .verified-badge {
+        display: flex;
         align-items: center;
-        text-transform: capitalize;
+        gap: 0.25rem;
+        margin-left: 0.5rem;
+    }
+
+    .verified-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .verified-text {
+        color: var(--primary-color);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
     }
 
     .profile-stats {
@@ -183,13 +181,13 @@
     }
 
     .stat-value {
-        font-weight: bold;
-        font-size: 1.2rem;
+        font-weight: var(--font-weight-bold);
+        font-size: var(--font-size-lg);
     }
 
     .stat-label {
         color: var(--dark-gray);
-        font-size: 0.9rem;
+        font-size: var(--font-size-sm);
     }
 
     .profile-actions {
@@ -211,7 +209,7 @@
     .section h2 {
         margin-top: 0;
         color: var(--primary-color);
-        font-size: 1.4rem;
+        font-size: var(--font-size-lg);
     }
 
     .account-details .detail {
@@ -220,7 +218,7 @@
     }
 
     .account-details .label {
-        font-weight: bold;
+        font-weight: var(--font-weight-bold);
         width: 100px;
     }
 
@@ -228,14 +226,14 @@
         display: inline-block;
         padding: 0.2rem 0.5rem;
         border-radius: 4px;
-        font-size: 0.8rem;
+        font-size: var(--font-size-xs);
         background-color: var(--light-gray);
     }
 
     .status-tag.verified {
         background-color: #f7c427;
         color: #333;
-        font-weight: bold;
+        font-weight: var(--font-weight-bold);
         text-transform: capitalize;
     }
 
@@ -254,7 +252,7 @@
 
     .quota-reset {
         margin-top: 0.5rem;
-        font-size: 0.9rem;
+        font-size: var(--font-size-sm);
     }
 
     @media (min-width: 768px) {

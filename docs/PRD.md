@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-**𝕏-Pilot** is a frontend interface for Tweepy, designed to help users manage their 𝕏 (𝕏) account within the limitations of the Free 𝕏 API tier. The application provides a user-friendly interface to Twitter's write functionality, helping users post tweets, manage relationships, and utilize the available read operations efficiently.
+**𝕏-Pilot** is a frontend interface for Tweepy, designed to help users manage their 𝕏 (𝕏) account within the limitations of the Free 𝕏 API tier. The application provides a user-friendly interface to Twitter's write functionality, helping users posts, manage relationships, and utilize the available read operations efficiently.
 
 ## 2. Background
 
@@ -24,12 +24,12 @@ Twitter's API has undergone significant changes with the introduction of paid ti
    - As a user, I want to view my authentication status and token details.
    - As a user, I want to revoke access or switch accounts easily.
 
-2. **Tweet Management**
-   - As a user, I want to compose and post tweets with an intuitive interface.
-   - As a user, I want to delete my tweets when needed.
-   - As a user, I want to schedule tweets for future posting.
-   - As a user, I want to post tweets with media attachments.
-   - As a user, I want to reply to existing tweets.
+2. **Post Management**
+   - As a user, I want to compose and posts with an intuitive interface.
+   - As a user, I want to delete my posts when needed.
+   - As a user, I want to schedule posts for future posting.
+   - As a user, I want to posts with media attachments.
+   - As a user, I want to reply to existing posts.
    - As a user, I want to track my monthly posting quota against the 1,500 limit.
 
 3. **User Relationship Management**
@@ -42,12 +42,12 @@ Twitter's API has undergone significant changes with the introduction of paid ti
    - As a user, I want to view my own user information including metrics.
    - As a user, I want to look up other users by username.
 
-5. **Tweet Engagement**
-   - As a user, I want to like/unlike tweets.
-   - As a user, I want to retweet/unretweet tweets.
-   - As a user, I want to bookmark/unbookmark tweets.
-   - As a user, I want to view users who liked or retweeted my tweets.
-   - As a user, I want to hide/unhide replies to my tweets.
+5. **Post Engagement**
+   - As a user, I want to like/unlike posts.
+   - As a user, I want to repost/unreposts.
+   - As a user, I want to bookmark/unbookmark posts.
+   - As a user, I want to view users who liked or reposted my posts.
+   - As a user, I want to hide/unhide replies to my posts.
 
 6. **List Management**
    - As a user, I want to create, update, and delete lists.
@@ -61,7 +61,7 @@ Twitter's API has undergone significant changes with the introduction of paid ti
    - As a user, I want to save and visualize data from streaming sessions.
 
 8. **Analytics**
-   - As a user, I want to track engagement metrics on my tweets over time.
+   - As a user, I want to track engagement metrics on my posts over time.
    - As a user, I want to visualize my follower growth and interaction patterns.
 
 9. **Automated Actions**
@@ -118,7 +118,7 @@ Twitter's API has undergone significant changes with the introduction of paid ti
 - Monthly usage counter (X/1500 posts)
 - Recent activity feed
 
-### 7.2 Tweet Composer
+### 7.2 Post Composer
 
 - Rich text editor with character counter
 - Media upload capability
@@ -174,7 +174,7 @@ Twitter's API has undergone significant changes with the introduction of paid ti
 ## 10. Success Metrics
 
 - User retention rate
-- Number of tweets posted through the application
+- Number of posts posted through the application
 - Time saved compared to manual posting
 - User satisfaction scores
 - Feature utilization rates
@@ -183,12 +183,12 @@ Twitter's API has undergone significant changes with the introduction of paid ti
 
 ### Phase 1 (MVP)
 - Authentication system
-- Basic tweet posting and management
+- Basic posting and management
 - User profile viewing
 - Following/Follower management
 
 ### Phase 2
-- Enhanced tweet composer with media support
+- Enhanced post composer with media support
 - Scheduled posting
 - List management
 - Basic analytics

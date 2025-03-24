@@ -4,13 +4,13 @@ This guide explores conversation moderation capabilities available through Tweep
 
 ## Moderation Capabilities Overview
 
-Twitter offers several features for moderating conversations. However, with the Free 𝕏 API Plan's focus on write-only operations, moderation capabilities are limited to actions you can take on your own tweets and replies.
+Twitter offers several features for moderating conversations. However, with the Free 𝕏 API Plan's focus on write-only operations, moderation capabilities are limited to actions you can take on your own posts and replies.
 
 ## Available Moderation Actions with Free Tier
 
 ### Hiding Replies
 
-One of the few moderation actions available with the Free tier is the ability to hide replies to your tweets:
+One of the few moderation actions available with the Free tier is the ability to hide replies to your posts:
 
 ```python
 import tweepy
@@ -23,7 +23,7 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Hide a reply to your tweet
+# Hide a reply to your post
 reply_id = "1234567890"  # Replace with the ID of the reply to hide
 result = client.hide_reply(reply_id)
 
@@ -41,9 +41,9 @@ else:
     print("Failed to unhide reply")
 ```
 
-### Deleting Your Own Tweets
+### Deleting Your Own Posts
 
-You can delete your own tweets as a form of moderation:
+You can delete your own posts as a form of moderation:
 
 ```python
 import tweepy
@@ -56,19 +56,19 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Delete your own tweet
-tweet_id = "1234567890"  # Replace with your tweet ID
-result = client.delete_tweet(tweet_id)
+# Delete your own post
+post_id = "1234567890"  # Replace with your post ID
+result = client.delete_post(post_id)
 
 if result.data["deleted"]:
-    print(f"Successfully deleted tweet {tweet_id}")
+    print(f"Successfully deleted post {post_id}")
 else:
-    print("Failed to delete tweet")
+    print("Failed to delete post")
 ```
 
 ## Limited Conversation Controls When Posting
 
-When creating tweets, you can set who can reply to your tweets, providing some proactive moderation:
+When creating posts, you can set who can reply to your posts, providing some proactive moderation:
 
 ```python
 import tweepy
@@ -81,14 +81,14 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Create a tweet with reply settings
+# Create a post with reply settings
 # Options: "everyone", "mentionedUsers", "following"
-result = client.create_tweet(
-    text="This is a tweet with limited reply settings.",
+result = client.create_post(
+    text="This is a post with limited reply settings.",
     reply_settings="mentionedUsers"  # Only mentioned users can reply
 )
 
-print(f"Tweet created with ID: {result.data['id']}")
+print(f"Post created with ID: {result.data['id']}")
 ```
 
 ## Limitations with Free Tier
@@ -96,7 +96,7 @@ print(f"Tweet created with ID: {result.data['id']}")
 It's important to understand that the Free tier has significant limitations for moderation:
 
 1. **No Filtered Stream Access**: You cannot monitor conversations in real-time
-2. **No Search Access**: You cannot search for potentially problematic tweets
+2. **No Search Access**: You cannot search for potentially problematic posts
 3. **Limited Read Operations**: You cannot retrieve conversations for analysis
 4. **Focus on Write Operations**: The Free tier is primarily for posting, not monitoring or moderating
 
@@ -133,18 +133,18 @@ client = tweepy.Client(
 me = client.get_me()
 user_id = me.data.id
 
-# Function to manually check and moderate your recent tweets
+# Function to manually check and moderate your recent posts
 # Note: This has very limited functionality with Free tier
-def moderate_own_tweets():
-    # This would normally use get_users_tweets, but that's limited in Free tier
-    # Instead, maintain a local database of your tweets
+def moderate_own_posts():
+    # This would normally use get_users_posts, but that's limited in Free tier
+    # Instead, maintain a local database of your posts
 
-    # For each tweet you've posted (from your local tracking)
-    tweet_id = "1234567890"  # This would come from your local tracking
+    # For each post you've posted (from your local tracking)
+    post_id = "1234567890"  # This would come from your local tracking
 
     # Check for any replies that need moderation
     # With Free tier, this would be a very manual process
-    reply_to_hide = input(f"Enter ID of reply to tweet {tweet_id} to hide (or press enter to skip): ")
+    reply_to_hide = input(f"Enter ID of reply to post {post_id} to hide (or press enter to skip): ")
 
     if reply_to_hide:
         try:
@@ -154,7 +154,7 @@ def moderate_own_tweets():
             print(f"Error hiding reply: {e}")
 
 # Call this function periodically or on demand
-moderate_own_tweets()
+moderate_own_posts()
 ```
 
 ### Using Webhook-Based Updates (OAuth-Based Solutions)
@@ -168,10 +168,10 @@ If you have a website where users authenticate with "Login with X" (available in
 # When a user reports a reply as problematic
 @app.route("/report_reply", methods=["POST"])
 def report_reply():
-    tweet_id = request.form["tweet_id"]
+    post_id = request.form["post_id"]
     reply_id = request.form["reply_id"]
 
-    # Verify the tweet belongs to the authenticated user
+    # Verify the post belongs to the authenticated user
 
     # Hide the reply if appropriate
     client.hide_reply(reply_id)
@@ -190,6 +190,6 @@ With these tiers, you can implement more robust moderation systems using Tweepy'
 
 ## Conclusion
 
-The Free 𝕏 API Plan offers very limited conversation moderation capabilities, focusing primarily on actions you can take on your own tweets (hiding replies, setting reply controls when posting). For more comprehensive moderation tools, upgrading to a paid tier is necessary.
+The Free 𝕏 API Plan offers very limited conversation moderation capabilities, focusing primarily on actions you can take on your own posts (hiding replies, setting reply controls when posting). For more comprehensive moderation tools, upgrading to a paid tier is necessary.
 
 If conversation moderation is a key requirement for your application, consider starting with the Free tier to test basic functionality, but plan to upgrade to at least the Basic tier for production use.

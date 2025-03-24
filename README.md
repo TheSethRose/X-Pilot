@@ -9,11 +9,11 @@ A frontend interface for managing 𝕏 (Twitter) accounts within the limitations
 ## Features
 
 - Authentication management for 𝕏 API v2
-- Tweet posting, deletion, and scheduling (within free tier limits)
+- Post posting, deletion, and scheduling (within free tier limits)
 - Support for dynamic character limits based on user verification status
 - User relationship management (follow/unfollow, block/mute)
 - User information and metrics viewing with verification status
-- Tweet engagement (like, retweet, bookmark)
+- Post engagement (like, repost, bookmark)
 - List management
 - Streaming capabilities
 - Basic analytics
@@ -83,7 +83,7 @@ X-Pilot/
 ├── templates/            # HTML templates
 │   ├── auth/             # Authentication templates
 │   ├── errors/           # Error page templates
-│   └── tweets/           # Tweet management templates
+│   └── posts/           # Post management templates
 ├── utils/                # Utility scripts
 ├── .env                  # Environment variables (create this)
 ├── README.md             # Project documentation

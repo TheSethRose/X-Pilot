@@ -20,20 +20,20 @@ When using Tweepy with the Free Tier, you're limited to the following capabiliti
 ### Available Write Operations
 
 ```python
-# Post a tweet
-client.create_tweet(text="Hello, world!")
+# Post a post
+client.create_post(text="Hello, world!")
 
 # Post with media (using v1.1 API for upload)
 auth = tweepy.OAuth1UserHandler("CONSUMER_KEY", "CONSUMER_SECRET", "ACCESS_TOKEN", "ACCESS_TOKEN_SECRET")
 api = tweepy.API(auth)  # v1.1 API for media upload
 media = api.media_upload("image.jpg")
-client.create_tweet(text="Tweet with media", media_ids=[media.media_id])
+client.create_post(text="Post with media", media_ids=[media.media_id])
 
-# Delete a tweet
-client.delete_tweet(tweet_id)
+# Delete a post
+client.delete_post(post_id)
 
-# Reply to a tweet
-client.create_tweet(text="This is a reply", in_reply_to_tweet_id="1234567890")
+# Reply to a post
+client.create_post(text="This is a reply", in_reply_to_post_id="1234567890")
 ```
 
 ### Testing API Operations
@@ -41,7 +41,7 @@ client.create_tweet(text="This is a reply", in_reply_to_tweet_id="1234567890")
 The Free Tier is designed primarily for testing and limited post creation. This means you can:
 
 1. Test authentication flows
-2. Test tweet posting functionality
+2. Test posting functionality
 3. Validate your app's integration with Twitter
 
 ### Limited Read Access
@@ -60,7 +60,7 @@ user = client.get_user(username="username")
 
 Understanding what's not included is equally important:
 
-1. **No Search Access**: You cannot search for tweets or users
+1. **No Search Access**: You cannot search for posts or users
 2. **No Timeline Access**: You cannot retrieve user timelines
 3. **No Filtered Stream**: You cannot access the streaming API
 4. **No Post Pulls**: You cannot retrieve posts from other users beyond very limited operations
@@ -79,22 +79,22 @@ The 1,500 posts per month limit applies at the app level. This means:
 import datetime
 import sqlite3
 
-def log_tweet_creation(tweet_id, user_id):
-    conn = sqlite3.connect('tweet_log.db')
+def log_post_creation(post_id, user_id):
+    conn = sqlite3.connect('post_log.db')
     c = conn.cursor()
 
     # Create table if it doesn't exist
-    c.execute('''CREATE TABLE IF NOT EXISTS tweet_log
-                 (id INTEGER PRIMARY KEY, tweet_id TEXT, user_id TEXT,
+    c.execute('''CREATE TABLE IF NOT EXISTS post_log
+                 (id INTEGER PRIMARY KEY, post_id TEXT, user_id TEXT,
                   created_at TIMESTAMP)''')
 
     # Insert a row
-    c.execute("INSERT INTO tweet_log VALUES (NULL, ?, ?, ?)",
-              (tweet_id, user_id, datetime.datetime.now()))
+    c.execute("INSERT INTO post_log VALUES (NULL, ?, ?, ?)",
+              (post_id, user_id, datetime.datetime.now()))
 
     # Get count for current month
     first_day = datetime.datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    c.execute("SELECT COUNT(*) FROM tweet_log WHERE created_at >= ?", (first_day,))
+    c.execute("SELECT COUNT(*) FROM post_log WHERE created_at >= ?", (first_day,))
     count = c.fetchone()[0]
 
     conn.commit()
@@ -102,11 +102,11 @@ def log_tweet_creation(tweet_id, user_id):
 
     return count, 1500 - count  # Return current count and remaining
 
-# After posting a tweet
-response = client.create_tweet(text="Hello, world!")
-tweet_id = response.data['id']
-count, remaining = log_tweet_creation(tweet_id, "user123")
-print(f"Posted tweet. Monthly usage: {count}/1500. Remaining: {remaining}")
+# After posting a post
+response = client.create_post(text="Hello, world!")
+post_id = response.data['id']
+count, remaining = log_post_creation(post_id, "user123")
+print(f"Posted post. Monthly usage: {count}/1500. Remaining: {remaining}")
 ```
 
 ## Best Practices for Free Tier
@@ -144,6 +144,6 @@ Based on the [Twitter API documentation](https://docs.x.com/x-api/what-to-build)
 
 ## Conclusion
 
-The Free Tier of Twitter's API is primarily designed for testing and limited write operations. While it provides a way to get started with the 𝕏 API, its limitations make it unsuitable for applications that require reading tweets, searching, or accessing user timelines at scale.
+The Free Tier of Twitter's API is primarily designed for testing and limited write operations. While it provides a way to get started with the 𝕏 API, its limitations make it unsuitable for applications that require reading posts, searching, or accessing user timelines at scale.
 
 For development purposes, the Free Tier is sufficient to test authentication and basic posting functionality. However, for production applications that require more functionality, consider upgrading to the Basic or Pro tiers.

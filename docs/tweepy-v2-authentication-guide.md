@@ -35,13 +35,13 @@ print(f"User: {user.data.name} (@{user.data.username})")
 ### Capabilities
 
 With Bearer Token authentication, you can:
-- Read public tweets
-- Search for tweets
+- Read public posts
+- Search for posts
 - Get user information
 - Retrieve followers and following lists
 - Access public lists
 
-You cannot perform write operations like posting tweets or sending DMs.
+You cannot perform write operations like posting posts or sending DMs.
 
 ## OAuth 1.0a User Context
 
@@ -67,18 +67,18 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Test by posting a tweet
-response = client.create_tweet(text="Testing 𝕏 API v2 with OAuth 1.0a!")
-print(f"Tweet posted with ID: {response.data['id']}")
+# Test by posting a post
+response = client.create_post(text="Testing 𝕏 API v2 with OAuth 1.0a!")
+print(f"Post posted with ID: {response.data['id']}")
 ```
 
 ### Capabilities
 
 With OAuth 1.0a authentication, you can:
 - Perform all read operations
-- Post tweets
-- Delete tweets
-- Like, retweet, and bookmark tweets
+- Post posts
+- Delete posts
+- Like, repost, and bookmark posts
 - Follow and unfollow users
 - Create and manage lists
 - Send direct messages
@@ -105,7 +105,7 @@ import tweepy
 oauth2_user_handler = tweepy.OAuth2UserHandler(
     client_id="YOUR_CLIENT_ID",
     redirect_uri="YOUR_CALLBACK_URL",
-    scope=["tweet.read", "tweet.write", "users.read", "follows.read", "follows.write"],
+    scope=["post.read", "post.write", "users.read", "follows.read", "follows.write"],
     # The scope determines what your app can access
 )
 

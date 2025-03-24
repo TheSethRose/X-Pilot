@@ -66,49 +66,49 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Test posting a tweet (requires user context)
-response = client.create_tweet(text="Hello, 𝕏 API v2!")
-print(f"Tweet posted with ID: {response.data['id']}")
+# Test posting a post (requires user context)
+response = client.create_post(text="Hello, 𝕏 API v2!")
+print(f"Post posted with ID: {response.data['id']}")
 ```
 
 ## Basic Operations
 
-### Reading Tweets
+### Reading Posts
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get a single tweet
-tweet = client.get_tweet(
-    "1234567890",  # Replace with actual tweet ID
-    tweet_fields=["created_at", "author_id", "public_metrics"]
+# Get a single post
+post = client.get_post(
+    "1234567890",  # Replace with actual post ID
+    post_fields=["created_at", "author_id", "public_metrics"]
 )
 
-print(f"Tweet text: {tweet.data.text}")
-print(f"Created at: {tweet.data.created_at}")
-print(f"Like count: {tweet.data.public_metrics['like_count']}")
+print(f"Post text: {post.data.text}")
+print(f"Created at: {post.data.created_at}")
+print(f"Like count: {post.data.public_metrics['like_count']}")
 ```
 
-### Searching for Tweets
+### Searching for Posts
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Search for recent tweets (limited to 7 days with free tier)
-search_results = client.search_recent_tweets(
+# Search for recent posts (limited to 7 days with free tier)
+search_results = client.search_recent_posts(
     query="python tweepy",
     max_results=10,
-    tweet_fields=["created_at", "author_id"]
+    post_fields=["created_at", "author_id"]
 )
 
-for tweet in search_results.data:
-    print(f"Tweet ID: {tweet.id}")
-    print(f"Content: {tweet.text}")
-    print(f"Created at: {tweet.created_at}")
+for post in search_results.data:
+    print(f"Post ID: {post.id}")
+    print(f"Content: {post.text}")
+    print(f"Created at: {post.created_at}")
     print("---")
 ```
 

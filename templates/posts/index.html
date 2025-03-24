@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import verified_badge %}
+
+{% block title %}Your Posts - 𝕏-Pilot{% endblock %}
+
+{% block content %}
+<div class="posts-header">
+    <h1>Your Posts</h1>
+    <a href="{{ url_for('posts.compose') }}" class="btn">New Post</a>
+</div>
+
+{% if posts %}
+<div class="posts-list">
+    {% for post in posts %}
+    <div class="post-card">
+        <div class="post-header">
+            <div class="post-author">
+                {% if current_user.profile_image_url %}
+                <img src="{{ current_user.profile_image_url }}" alt="{{ current_user.name }}" class="author-avatar">
+                {% else %}
+                <div class="author-avatar-placeholder">{{ current_user.name[0].upper() }}</div>
+                {% endif %}
+                <div class="author-info">
+                    <span class="author-name">{{ current_user.name }}
+                        {% if current_user.verified %}
+                            {{ verified_badge(current_user.verified_type) }}
+                        {% endif %}
+                    </span>
+                    <span class="author-username">@{{ current_user.username }}</span>
+                </div>
+            </div>
+            <div class="post-meta">
+                <span class="post-timestamp">{{ post.created_at.strftime('%b %d') }}</span>
+                <span class="post-status {{ post.status }}">{{ post.status }}</span>
+            </div>
+        </div>
+        <div class="post-content">
+            {{ post.text }}
+        </div>
+        <div class="post-actions">
+            <div class="post-metrics">
+                {% if post.status == 'posted' %}
+                <a href="https://twitter.com/user/status/{{ post.twitter_id }}" target="_blank" class="post-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    View on 𝕏
+                </a>
+                {% endif %}
+            </div>
+            <div class="post-controls">
+                {% if post.status == 'scheduled' %}
+                <span class="scheduled-time">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    {{ post.scheduled_at.strftime('%b %d, %Y at %H:%M') }}
+                </span>
+                {% endif %}
+                <form action="{{ url_for('posts.delete', post_id=post.id) }}" method="post" class="delete-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn-link text-danger" onclick="return confirm('Are you sure you want to delete this post?')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>You haven't posted any posts yet.</p>
+    <a href="{{ url_for('posts.compose') }}" class="btn">Compose Your First Post</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .posts-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .posts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .post-card {
+        background-color: var(--very-light-gray);
+        padding: 1rem;
+        border-bottom: 1px solid var(--light-gray);
+        transition: background-color 0.2s ease;
+    }
+
+    .post-card:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+    }
+
+    .post-author {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .author-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .author-avatar-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: var(--font-weight-bold);
+        font-size: var(--font-size-lg);
+    }
+
+    .author-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .author-name {
+        font-weight: var(--font-weight-bold);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: var(--font-size-base);
+    }
+
+    .verified-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .verified-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .verified-text {
+        color: var(--primary-color);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
+    }
+
+    .author-username {
+        color: var(--secondary-color);
+        font-size: var(--font-size-sm);
+    }
+
+    .post-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: var(--font-size-sm);
+        color: var(--secondary-color);
+    }
+
+    .post-timestamp {
+        color: var(--secondary-color);
+    }
+
+    .post-status {
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
+        padding: 0.25rem 0.5rem;
+        border-radius: 999px;
+    }
+
+    .post-status.draft {
+        background-color: var(--light-gray);
+        color: var(--secondary-color);
+    }
+
+    .post-status.scheduled {
+        background-color: rgba(29, 161, 242, 0.1);
+        color: var(--primary-color);
+    }
+
+    .post-status.posted {
+        background-color: rgba(23, 191, 99, 0.1);
+        color: var(--success-color);
+    }
+
+    .post-status.failed {
+        background-color: rgba(224, 36, 94, 0.1);
+        color: var(--danger-color);
+    }
+
+    .post-content {
+        margin: 0.5rem 0 1rem 3.75rem;
+        line-height: var(--line-height-normal);
+        white-space: pre-wrap;
+        font-size: var(--font-size-base);
+    }
+
+    .post-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: 3.75rem;
+        padding-top: 0.5rem;
+    }
+
+    .post-metrics {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .post-link {
+        color: var(--secondary-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: var(--font-size-sm);
+        transition: color 0.2s ease;
+    }
+
+    .post-link:hover {
+        color: var(--primary-color);
+    }
+
+    .post-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .scheduled-time {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        font-size: var(--font-size-sm);
+    }
+
+    .btn-link {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: var(--font-size-sm);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+
+    .text-danger {
+        color: var(--danger-color);
+    }
+
+    .btn-link:hover {
+        background-color: rgba(224, 36, 94, 0.1);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background-color: var(--very-light-gray);
+        border-radius: 8px;
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 640px) {
+        .post-header {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .post-meta {
+            margin-left: 3.75rem;
+        }
+
+        .post-content {
+            margin-left: 3.75rem;
+        }
+
+        .post-actions {
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .post-controls {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+</style>
+{% endblock %}

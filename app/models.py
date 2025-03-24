@@ -30,16 +30,16 @@ class User(db.Model, UserMixin):
     last_login = db.Column(db.DateTime, nullable=True)
 
     # Relationships
-    tweets = db.relationship('Tweet', backref='user', lazy=True, cascade='all, delete-orphan')
+    posts = db.relationship('Post', backref='user', lazy=True, cascade='all, delete-orphan')
     streams = db.relationship('Stream', backref='user', lazy=True, cascade='all, delete-orphan')
     quota_usage = db.relationship('QuotaUsage', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<User {self.username}>'
 
-class Tweet(db.Model):
-    """Tweet model for managing tweets."""
-    __tablename__ = 'tweets'
+class Post(db.Model):
+    """Post model for managing posts."""
+    __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)
     twitter_id = db.Column(db.String(64), unique=True, nullable=True)
@@ -58,7 +58,7 @@ class Tweet(db.Model):
     status = db.Column(db.String(16), default='draft')
 
     def __repr__(self):
-        return f'<Tweet {self.id}>'
+        return f'<Post {self.id}>'
 
     @property
     def media(self):
@@ -120,8 +120,8 @@ class StreamResult(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     stream_id = db.Column(db.Integer, db.ForeignKey('streams.id'), nullable=False)
-    tweet_id = db.Column(db.String(64), nullable=False)
-    tweet_text = db.Column(db.Text, nullable=False)
+    post_id = db.Column(db.String(64), nullable=False)
+    post_text = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.String(64), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, current_app
 from flask_login import login_required, current_user
-from app.models import Tweet
+from app.models import Post
 from utils.quota_tracker import QuotaTracker
 
 main_bp = Blueprint('main', __name__)
@@ -19,13 +19,13 @@ def dashboard():
     # Get quota information
     quota_status = QuotaTracker.get_quota_status(current_user)
 
-    # Get tweet counts and recent activity
-    tweets = Tweet.query.filter_by(user_id=current_user.id).order_by(Tweet.created_at.desc()).all()
-    tweet_count = len(tweets)
-    recent_tweets = tweets[:5]  # Get 5 most recent tweets
+    # Get post counts and recent activity
+    posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.created_at.desc()).all()
+    post_count = len(posts)
+    recent_posts = posts[:5]  # Get 5 most recent posts
 
-    # Get count of scheduled tweets
-    scheduled_count = Tweet.query.filter_by(
+    # Get count of scheduled posts
+    scheduled_count = Post.query.filter_by(
         user_id=current_user.id,
         status='scheduled'
     ).count()
@@ -40,8 +40,8 @@ def dashboard():
         quota_percentage=quota_status['percentage'],
         quota_used=quota_status['posts_used'],
         quota_reset_date=quota_status['reset_date'],
-        tweet_count=tweet_count,
-        recent_tweets=recent_tweets,
+        post_count=post_count,
+        recent_posts=recent_posts,
         scheduled_count=scheduled_count,
         follower_count=follower_count,
         following_count=following_count

@@ -8,7 +8,7 @@ This document provides a comprehensive overview of Tweepy's capabilities for int
 - [Authentication](#authentication)
 - [Client vs AsyncClient](#client-vs-asyncclient)
 - [Available API Features](#available-api-features)
-  - [Tweets](#tweets)
+  - [Posts](#posts)
   - [Users](#users)
   - [Spaces](#spaces)
   - [Lists](#lists)
@@ -65,7 +65,7 @@ Tweepy supports multiple authentication methods for the 𝕏 API v2:
    oauth2_user_handler = tweepy.OAuth2UserHandler(
        client_id="CLIENT_ID",
        redirect_uri="CALLBACK_URL",
-       scope=["tweet.read", "users.read", "offline.access"],
+       scope=["post.read", "users.read", "offline.access"],
    )
 
    # Get authorization URL
@@ -92,24 +92,24 @@ Both clients provide the same functionality, but `AsyncClient` is designed for a
 
 The Free 𝕏 API Plan provides access to a subset of 𝕏 API v2 endpoints. Here's what you can access:
 
-### Tweets
+### Posts
 
-#### Reading Tweets
+#### Reading Posts
 
-- **Lookup Tweets by ID**:
+- **Lookup Posts by ID**:
   ```python
-  client.get_tweet(id)
-  client.get_tweets([id1, id2, ...])
+  client.get_post(id)
+  client.get_posts([id1, id2, ...])
   ```
 
-- **Search Recent Tweets** (Limited to 7 days of data):
+- **Search Recent Posts** (Limited to 7 days of data):
   ```python
-  client.search_recent_tweets(query)
+  client.search_recent_posts(query)
   ```
 
 - **Get User Timeline**:
   ```python
-  client.get_users_tweets(user_id)
+  client.get_users_posts(user_id)
   ```
 
 - **Get User Mentions**:
@@ -117,76 +117,76 @@ The Free 𝕏 API Plan provides access to a subset of 𝕏 API v2 endpoints. Her
   client.get_users_mentions(user_id)
   ```
 
-- **Get Tweet Counts** (Volume of matching tweets):
+- **Get Post Counts** (Volume of matching posts):
   ```python
-  client.get_recent_tweets_count(query)
+  client.get_recent_posts_count(query)
   ```
 
-#### Engage with Tweets
+#### Engage with Posts
 
-- **Like a Tweet**:
+- **Like a Post**:
   ```python
-  client.like(tweet_id)
+  client.like(post_id)
   ```
 
-- **Unlike a Tweet**:
+- **Unlike a Post**:
   ```python
-  client.unlike(tweet_id)
+  client.unlike(post_id)
   ```
 
-- **Retweet**:
+- **Repost**:
   ```python
-  client.retweet(tweet_id)
+  client.repost(post_id)
   ```
 
-- **Remove Retweet**:
+- **Remove Repost**:
   ```python
-  client.unretweet(tweet_id)
+  client.unrepost(post_id)
   ```
 
-- **Bookmark a Tweet**:
+- **Bookmark a Post**:
   ```python
-  client.bookmark(tweet_id)
+  client.bookmark(post_id)
   ```
 
 - **Remove Bookmark**:
   ```python
-  client.remove_bookmark(tweet_id)
+  client.remove_bookmark(post_id)
   ```
 
 - **Hide/Unhide Replies**:
   ```python
-  client.hide_reply(tweet_id)
-  client.unhide_reply(tweet_id)
+  client.hide_reply(post_id)
+  client.unhide_reply(post_id)
   ```
 
-#### Managing Tweets
+#### Managing Posts
 
-- **Create a Tweet**:
+- **Create a Post**:
   ```python
-  client.create_tweet(text="Hello, World!")
+  client.create_post(text="Hello, World!")
   ```
 
-- **Delete a Tweet**:
+- **Delete a Post**:
   ```python
-  client.delete_tweet(tweet_id)
+  client.delete_post(post_id)
   ```
 
-#### Additional Tweet Information
+#### Additional Post Information
 
 - **Get Liking Users**:
   ```python
-  client.get_liking_users(tweet_id)
+  client.get_liking_users(post_id)
   ```
 
-- **Get Retweeters**:
+- **Get Reposters**:
   ```python
-  client.get_retweeters(tweet_id)
+  client.get_reposters(post_id)
   ```
 
-- **Get Quote Tweets**:
+- **Get Quote Posts**:
   ```python
-  client.get_quote_tweets(tweet_id)
+  client.get_quote_posts(post_id)
   ```
 
 ### Users
@@ -265,9 +265,9 @@ The Free 𝕏 API Plan provides access to a subset of 𝕏 API v2 endpoints. Her
   client.search_spaces(query)
   ```
 
-- **Get Space Tweets**:
+- **Get Space Posts**:
   ```python
-  client.get_space_tweets(space_id)
+  client.get_space_posts(space_id)
   ```
 
 ### Lists
@@ -313,9 +313,9 @@ The Free 𝕏 API Plan provides access to a subset of 𝕏 API v2 endpoints. Her
   client.get_owned_lists(user_id)
   ```
 
-- **Get List Tweets**:
+- **Get List Posts**:
   ```python
-  client.get_list_tweets(list_id)
+  client.get_list_posts(list_id)
   ```
 
 ### Direct Messages
@@ -334,14 +334,14 @@ Direct Messages have limited functionality on the Free 𝕏 API Plan.
 
 ### Streaming
 
-The filtered stream allows you to receive Tweets in real-time that match your specified rules.
+The filtered stream allows you to receive Posts in real-time that match your specified rules.
 
 ```python
 import tweepy
 
 class MyStreamingClient(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        print(tweet.text)
+    def on_post(self, post):
+        print(post.text)
 
 # Initialize with your bearer token
 streaming_client = MyStreamingClient("YOUR_BEARER_TOKEN")
@@ -359,12 +359,12 @@ Twitter API v2 uses a concept of expansions and fields to control what data is r
 
 ### Expansions
 
-Expansions allow you to request additional related objects. For example, when getting a Tweet, you can expand user information:
+Expansions allow you to request additional related objects. For example, when getting a Post, you can expand user information:
 
 ```python
-client.get_tweet(
+client.get_post(
     id,
-    expansions=["author_id", "referenced_tweets.id", "attachments.media_keys"]
+    expansions=["author_id", "referenced_posts.id", "attachments.media_keys"]
 )
 ```
 
@@ -373,9 +373,9 @@ client.get_tweet(
 Fields allow you to specify which attributes to include for each object type:
 
 ```python
-client.get_tweet(
+client.get_post(
     id,
-    tweet_fields=["created_at", "public_metrics", "source"],
+    post_fields=["created_at", "public_metrics", "source"],
     user_fields=["profile_image_url", "verified", "description"],
     media_fields=["preview_image_url", "type", "url"]
 )
@@ -386,9 +386,9 @@ client.get_tweet(
 Tweepy provides a `Paginator` class to handle pagination for endpoints that return multiple items:
 
 ```python
-# Get all tweets from a user's timeline
-for tweet in tweepy.Paginator(client.get_users_tweets, user_id, max_results=100).flatten(limit=200):
-    print(tweet.id, tweet.text)
+# Get all posts from a user's timeline
+for post in tweepy.Paginator(client.get_users_posts, user_id, max_results=100).flatten(limit=200):
+    print(post.id, post.text)
 ```
 
 The `flatten()` method consolidates all pages into a single iterator of items.
@@ -396,7 +396,7 @@ The `flatten()` method consolidates all pages into a single iterator of items.
 To access `includes` data, you need to iterate through each response instead:
 
 ```python
-for response in tweepy.Paginator(client.get_users_tweets, user_id, max_results=100, user_fields=["description"]):
+for response in tweepy.Paginator(client.get_users_posts, user_id, max_results=100, user_fields=["description"]):
     for user in response.includes.get("users", []):
         print(user.id, user.description)
 ```
@@ -408,7 +408,7 @@ All 𝕏 API v2 endpoints have rate limits. The Free 𝕏 API Plan has stricter 
 - Most read operations: 500-1500 requests per 15-minute window
 - Most write operations: 25-50 requests per 15-minute window
 - Search endpoints: 60-450 requests per 15-minute window
-- Some endpoints (like search_all_tweets) are limited to 1 request per second
+- Some endpoints (like search_all_posts) are limited to 1 request per second
 
 When you exceed a rate limit, the API returns a 429 error. Tweepy will raise a `TooManyRequests` exception.
 
@@ -419,24 +419,24 @@ When you exceed a rate limit, the API returns a 429 error. Tweepy will raise a `
 When printing objects directly, you might only see default fields. The data is still accessible as attributes:
 
 ```python
-tweet = client.get_tweet(id, expansions=["author_id"], user_fields=["description"])
-print(tweet.includes["users"][0].description)  # Access the description
+post = client.get_post(id, expansions=["author_id"], user_fields=["description"])
+print(post.includes["users"][0].description)  # Access the description
 ```
 
-### Rate Limiting with search_all_tweets
+### Rate Limiting with search_all_posts
 
-The `search_all_tweets` endpoint has an additional 1 request per second rate limit:
+The `search_all_posts` endpoint has an additional 1 request per second rate limit:
 
 ```python
 import time
-for response in tweepy.Paginator(client.search_all_tweets, query):
+for response in tweepy.Paginator(client.search_all_posts, query):
     # Process response
     time.sleep(1)  # Add 1 second delay between requests
 ```
 
 ## Code Examples
 
-### Basic Tweet Lookup
+### Basic Post Lookup
 
 ```python
 import tweepy
@@ -444,27 +444,27 @@ import tweepy
 # Authentication
 client = tweepy.Client("YOUR_BEARER_TOKEN")
 
-# Get a single tweet with expansions
-tweet = client.get_tweet(
+# Get a single post with expansions
+post = client.get_post(
     id="1234567890",
     expansions=["author_id", "attachments.media_keys"],
-    tweet_fields=["created_at", "public_metrics"],
+    post_fields=["created_at", "public_metrics"],
     user_fields=["profile_image_url", "verified"]
 )
 
-# Print tweet data
-print(f"Tweet: {tweet.data.text}")
-print(f"Created at: {tweet.data.created_at}")
-print(f"Likes: {tweet.data.public_metrics['like_count']}")
+# Print post data
+print(f"Post: {post.data.text}")
+print(f"Created at: {post.data.created_at}")
+print(f"Likes: {post.data.public_metrics['like_count']}")
 
 # Access author information from includes
-if "users" in tweet.includes:
-    author = tweet.includes["users"][0]
+if "users" in post.includes:
+    author = post.includes["users"][0]
     print(f"Author: {author.username}")
     print(f"Verified: {author.verified}")
 ```
 
-### Search Recent Tweets
+### Search Recent Posts
 
 ```python
 import tweepy
@@ -472,21 +472,21 @@ import tweepy
 # Authentication
 client = tweepy.Client("YOUR_BEARER_TOKEN")
 
-# Search for recent tweets
-search_results = client.search_recent_tweets(
+# Search for recent posts
+search_results = client.search_recent_posts(
     query="python",
     max_results=10,
-    tweet_fields=["created_at", "public_metrics"],
+    post_fields=["created_at", "public_metrics"],
     expansions=["author_id"],
     user_fields=["profile_image_url"]
 )
 
 # Process results
-for tweet in search_results.data:
-    print(f"Tweet by @{next((user.username for user in search_results.includes['users'] if user.id == tweet.author_id), 'unknown')}: {tweet.text}")
+for post in search_results.data:
+    print(f"Post by @{next((user.username for user in search_results.includes['users'] if user.id == post.author_id), 'unknown')}: {post.text}")
 ```
 
-### Post a Tweet
+### Post a Post
 
 ```python
 import tweepy
@@ -499,25 +499,25 @@ client = tweepy.Client(
     access_token_secret="ACCESS_TOKEN_SECRET"
 )
 
-# Post a tweet
-response = client.create_tweet(text="Hello, 𝕏 API v2 with Tweepy!")
-print(f"Tweet posted with ID: {response.data['id']}")
+# Post a post
+response = client.create_post(text="Hello, 𝕏 API v2 with Tweepy!")
+print(f"Post posted with ID: {response.data['id']}")
 ```
 
-### Stream Tweets in Real-time
+### Stream Posts in Real-time
 
 ```python
 import tweepy
 
 # Create a streaming client subclass
-class TweetPrinter(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        print(f"Tweet ID: {tweet.id}")
-        print(f"Text: {tweet.text}")
+class PostPrinter(tweepy.StreamingClient):
+    def on_post(self, post):
+        print(f"Post ID: {post.id}")
+        print(f"Text: {post.text}")
         print("---")
 
 # Authenticate and initialize the streaming client
-streaming_client = TweetPrinter("YOUR_BEARER_TOKEN")
+streaming_client = PostPrinter("YOUR_BEARER_TOKEN")
 
 # Delete existing rules if needed
 existing_rules = streaming_client.get_rules()
@@ -531,7 +531,7 @@ streaming_client.add_rules(tweepy.StreamRule("tweepy"))
 
 # Start the stream
 streaming_client.filter(
-    tweet_fields=["created_at", "author_id"],
+    post_fields=["created_at", "author_id"],
     expansions=["author_id"],
     user_fields=["username"]
 )

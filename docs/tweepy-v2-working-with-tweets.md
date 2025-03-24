@@ -1,108 +1,108 @@
-# Working with Tweets in Tweepy for 𝕏 API v2
+# Working with Posts in Tweepy for 𝕏 API v2
 
-This guide covers how to work with tweets using Tweepy and the 𝕏 API v2, focusing on the capabilities available with the Free 𝕏 API Plan.
+This guide covers how to work with posts using Tweepy and the 𝕏 API v2, focusing on the capabilities available with the Free 𝕏 API Plan.
 
-## Reading Tweets
+## Reading Posts
 
-### Getting a Single Tweet
+### Getting a Single Post
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get a single tweet by ID
-tweet = client.get_tweet(
-    id="1234567890",  # Replace with actual tweet ID
-    tweet_fields=["created_at", "author_id", "public_metrics", "source"],
+# Get a single post by ID
+post = client.get_post(
+    id="1234567890",  # Replace with actual post ID
+    post_fields=["created_at", "author_id", "public_metrics", "source"],
     user_fields=["name", "username", "profile_image_url"],
     expansions=["author_id"]
 )
 
-# Access basic tweet information
-print(f"Tweet text: {tweet.data.text}")
-print(f"Created at: {tweet.data.created_at}")
-print(f"Tweet ID: {tweet.data.id}")
+# Access basic post information
+print(f"Post text: {post.data.text}")
+print(f"Created at: {post.data.created_at}")
+print(f"Post ID: {post.data.id}")
 
 # Access metrics
-metrics = tweet.data.public_metrics
+metrics = post.data.public_metrics
 print(f"Likes: {metrics['like_count']}")
-print(f"Retweets: {metrics['retweet_count']}")
+print(f"Reposts: {metrics['repost_count']}")
 print(f"Replies: {metrics['reply_count']}")
-print(f"Quote Tweets: {metrics['quote_count']}")
+print(f"Quote Posts: {metrics['quote_count']}")
 
 # Access author information from expansions
-if "users" in tweet.includes:
-    author = tweet.includes["users"][0]
+if "users" in post.includes:
+    author = post.includes["users"][0]
     print(f"Author: {author.name} (@{author.username})")
     print(f"Profile image: {author.profile_image_url}")
 ```
 
-### Getting Multiple Tweets
+### Getting Multiple Posts
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get multiple tweets by ID
-tweets = client.get_tweets(
-    ids=["1234567890", "9876543210"],  # Replace with actual tweet IDs
-    tweet_fields=["created_at", "public_metrics"],
+# Get multiple posts by ID
+posts = client.get_posts(
+    ids=["1234567890", "9876543210"],  # Replace with actual post IDs
+    post_fields=["created_at", "public_metrics"],
     expansions=["author_id"],
     user_fields=["username"]
 )
 
-# Process each tweet
-for tweet in tweets.data:
-    print(f"Tweet ID: {tweet.id}")
-    print(f"Text: {tweet.text}")
-    print(f"Created at: {tweet.created_at}")
-    print(f"Likes: {tweet.public_metrics['like_count']}")
+# Process each post
+for post in posts.data:
+    print(f"Post ID: {post.id}")
+    print(f"Text: {post.text}")
+    print(f"Created at: {post.created_at}")
+    print(f"Likes: {post.public_metrics['like_count']}")
     print("---")
 
-# Access author information using tweet.author_id
-for tweet in tweets.data:
-    author = next((user for user in tweets.includes["users"] if user.id == tweet.author_id), None)
+# Access author information using post.author_id
+for post in posts.data:
+    author = next((user for user in posts.includes["users"] if user.id == post.author_id), None)
     if author:
-        print(f"Tweet by @{author.username}: {tweet.text}")
+        print(f"Post by @{author.username}: {post.text}")
 ```
 
-### Searching for Tweets
+### Searching for Posts
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Search for recent tweets (limited to 7 days with free tier)
-search_results = client.search_recent_tweets(
+# Search for recent posts (limited to 7 days with free tier)
+search_results = client.search_recent_posts(
     query="python tweepy",
     max_results=10,
-    tweet_fields=["created_at", "public_metrics"],
+    post_fields=["created_at", "public_metrics"],
     expansions=["author_id"],
     user_fields=["username", "verified"]
 )
 
 # Process search results
 if not search_results.data:
-    print("No tweets found matching the query")
+    print("No posts found matching the query")
 else:
-    for tweet in search_results.data:
-        # Find the author for this tweet
-        author = next((user for user in search_results.includes["users"] if user.id == tweet.author_id), None)
+    for post in search_results.data:
+        # Find the author for this post
+        author = next((user for user in search_results.includes["users"] if user.id == post.author_id), None)
         username = author.username if author else "unknown"
         verified = "✓" if author and author.verified else ""
 
-        print(f"@{username} {verified}: {tweet.text}")
-        print(f"Likes: {tweet.public_metrics['like_count']} | Retweets: {tweet.public_metrics['retweet_count']}")
-        print(f"Created at: {tweet.created_at}")
+        print(f"@{username} {verified}: {post.text}")
+        print(f"Likes: {post.public_metrics['like_count']} | Reposts: {post.public_metrics['repost_count']}")
+        print(f"Created at: {post.created_at}")
         print("---")
 ```
 
-## Creating and Managing Tweets
+## Creating and Managing Posts
 
-### Posting a Tweet
+### Posting a Post
 
 ```python
 import tweepy
@@ -115,34 +115,34 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Post a simple tweet
-response = client.create_tweet(text="Hello, 𝕏 API v2!")
-print(f"Tweet posted with ID: {response.data['id']}")
+# Post a simple post
+response = client.create_post(text="Hello, 𝕏 API v2!")
+print(f"Post posted with ID: {response.data['id']}")
 
-# Post a tweet with a poll
-response = client.create_tweet(
+# Post a post with a poll
+response = client.create_post(
     text="What's your favorite programming language?",
     poll_options=["Python", "JavaScript", "Java", "Other"],
     poll_duration_minutes=1440  # 24 hours
 )
-print(f"Poll tweet posted with ID: {response.data['id']}")
+print(f"Poll posted with ID: {response.data['id']}")
 
-# Reply to a tweet
-response = client.create_tweet(
+# Reply to a post
+response = client.create_post(
     text="This is a reply!",
-    in_reply_to_tweet_id="1234567890"  # Replace with actual tweet ID
+    in_reply_to_post_id="1234567890"  # Replace with actual post ID
 )
 print(f"Reply posted with ID: {response.data['id']}")
 
-# Quote tweet
-response = client.create_tweet(
-    text="Check out this interesting tweet!",
-    quote_tweet_id="1234567890"  # Replace with actual tweet ID
+# Quote post
+response = client.create_post(
+    text="Check out this interesting post!",
+    quote_post_id="1234567890"  # Replace with actual post ID
 )
-print(f"Quote tweet posted with ID: {response.data['id']}")
+print(f"Quote posted with ID: {response.data['id']}")
 ```
 
-### Deleting a Tweet
+### Deleting a Post
 
 ```python
 import tweepy
@@ -155,18 +155,18 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Delete a tweet
-response = client.delete_tweet("1234567890")  # Replace with actual tweet ID
+# Delete a post
+response = client.delete_post("1234567890")  # Replace with actual post ID
 
 if response.data["deleted"]:
-    print("Tweet successfully deleted")
+    print("Post successfully deleted")
 else:
-    print("Failed to delete tweet")
+    print("Failed to delete post")
 ```
 
-## Engaging with Tweets
+## Engaging with Posts
 
-### Like, Unlike, Retweet, and Unretweet
+### Like, Unlike, Repost, and Unrepost
 
 ```python
 import tweepy
@@ -179,23 +179,23 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-tweet_id = "1234567890"  # Replace with actual tweet ID
+post_id = "1234567890"  # Replace with actual post ID
 
-# Like a tweet
-client.like(tweet_id)
-print("Tweet liked")
+# Like a post
+client.like(post_id)
+print("Post liked")
 
-# Unlike a tweet
-client.unlike(tweet_id)
-print("Tweet unliked")
+# Unlike a post
+client.unlike(post_id)
+print("Post unliked")
 
-# Retweet
-client.retweet(tweet_id)
-print("Tweet retweeted")
+# Repost
+client.repost(post_id)
+print("Post reposted")
 
-# Undo retweet
-client.unretweet(tweet_id)
-print("Retweet removed")
+# Undo repost
+client.unrepost(post_id)
+print("Repost removed")
 ```
 
 ### Bookmark and Hide Replies
@@ -211,41 +211,41 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-tweet_id = "1234567890"  # Replace with actual tweet ID
+post_id = "1234567890"  # Replace with actual post ID
 
-# Bookmark a tweet
-client.bookmark(tweet_id)
-print("Tweet bookmarked")
+# Bookmark a post
+client.bookmark(post_id)
+print("Post bookmarked")
 
 # Remove bookmark
-client.remove_bookmark(tweet_id)
+client.remove_bookmark(post_id)
 print("Bookmark removed")
 
 # Hide a reply
-client.hide_reply(tweet_id)
+client.hide_reply(post_id)
 print("Reply hidden")
 
 # Unhide a reply
-client.unhide_reply(tweet_id)
+client.unhide_reply(post_id)
 print("Reply unhidden")
 ```
 
-## Getting Tweet Interactions
+## Getting Post Interactions
 
-### Who Liked a Tweet
+### Who Liked a Post
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get users who liked a tweet
+# Get users who liked a post
 liking_users = client.get_liking_users(
-    id="1234567890",  # Replace with actual tweet ID
+    id="1234567890",  # Replace with actual post ID
     user_fields=["profile_image_url", "description", "public_metrics"]
 )
 
-print(f"Users who liked this tweet:")
+print(f"Users who liked this post:")
 for user in liking_users.data:
     followers = user.public_metrics["followers_count"]
     print(f"- @{user.username} ({user.name}) - {followers} followers")
@@ -254,41 +254,41 @@ for user in liking_users.data:
     print()
 ```
 
-### Who Retweeted a Tweet
+### Who Reposted a Post
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get users who retweeted a tweet
-retweeters = client.get_retweeters(
-    id="1234567890",  # Replace with actual tweet ID
+# Get users who reposted a post
+reposters = client.get_reposters(
+    id="1234567890",  # Replace with actual post ID
     user_fields=["profile_image_url", "verified"]
 )
 
-print(f"Users who retweeted this tweet:")
-for user in retweeters.data:
+print(f"Users who reposted this post:")
+for user in reposters.data:
     verified = "✓" if user.verified else ""
     print(f"- @{user.username} {verified}")
 ```
 
-### Get Quote Tweets
+### Get Quote Posts
 
 ```python
 import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get quote tweets
-quotes = client.get_quote_tweets(
-    id="1234567890",  # Replace with actual tweet ID
+# Get quote posts
+quotes = client.get_quote_posts(
+    id="1234567890",  # Replace with actual post ID
     max_results=10,
     expansions=["author_id"],
     user_fields=["username"]
 )
 
-print(f"Quote tweets:")
+print(f"Quote posts:")
 for quote in quotes.data:
     # Find the author
     author = next((user for user in quotes.includes["users"] if user.id == quote.author_id), None)
@@ -300,7 +300,7 @@ for quote in quotes.data:
 
 ## Working with Media
 
-Note: For media uploads with the 𝕏 API v2, you need to use the v1.1 media upload endpoint and then reference the media ID in your v2 tweet creation.
+Note: For media uploads with the 𝕏 API v2, you need to use the v1.1 media upload endpoint and then reference the media ID in your v2 post creation.
 
 ```python
 import tweepy
@@ -322,12 +322,12 @@ client = tweepy.Client(
 media = api.media_upload("image.jpg")
 media_id = media.media_id
 
-# Post tweet with media using v2 API
-response = client.create_tweet(
+# Post post with media using v2 API
+response = client.create_post(
     text="Check out this image!",
     media_ids=[media_id]
 )
-print(f"Tweet with media posted: {response.data['id']}")
+print(f"Post with media posted: {response.data['id']}")
 ```
 
 ## Tips and Best Practices

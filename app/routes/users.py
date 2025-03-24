@@ -26,7 +26,7 @@ def profile():
         profile_data = {
             'following_count': 0,
             'followers_count': 0,
-            'tweet_count': len(current_user.tweets) if current_user.tweets else 0,
+            'post_count': len(current_user.posts) if current_user.posts else 0,
             'created_at': current_user.last_login or datetime.utcnow(),
             'description': f"Profile for @{current_user.username}",
             'username': current_user.username,
@@ -85,7 +85,7 @@ def profile():
                         profile_data.update({
                             'following_count': metrics.get('following_count', 0),
                             'followers_count': metrics.get('followers_count', 0),
-                            'tweet_count': metrics.get('tweet_count', 0),
+                            'post_count': metrics.get('post_count', 0),
                             'created_at': getattr(user, 'created_at', profile_data['created_at']),
                             'description': getattr(user, 'description', profile_data['description']),
                             'verified': getattr(user, 'verified', False),

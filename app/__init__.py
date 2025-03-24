@@ -76,12 +76,12 @@ def create_app(test_config=None):
     try:
         from app.routes.auth import auth_bp
         from app.routes.main import main_bp
-        from app.routes.tweets import tweets_bp
+        from app.routes.posts import posts_bp
         from app.routes.users import users_bp
 
         app.register_blueprint(auth_bp)
         app.register_blueprint(main_bp)
-        app.register_blueprint(tweets_bp)
+        app.register_blueprint(posts_bp)
         app.register_blueprint(users_bp)
     except ImportError as e:
         app.logger.warning(f"Could not import blueprints: {e}")

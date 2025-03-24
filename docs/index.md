@@ -13,9 +13,9 @@ Welcome to the comprehensive documentation for using Tweepy with the 𝕏 (𝕏)
 ### Feature-Specific Guides
 
 - [Authentication Guide](tweepy-v2-authentication-guide.md) - Detailed information on authentication methods
-- [Working with Tweets](tweepy-v2-working-with-tweets.md) - Guide for reading, creating, and interacting with tweets
+- [Working with Posts](tweepy-v2-working-with-posts.md) - Guide for reading, creating, and interacting with posts
 - [Working with Users](tweepy-v2-working-with-users.md) - Guide for user operations and relationships
-- [Streaming Guide](tweepy-v2-streaming-guide.md) - Real-time tweet streaming with filtered streams
+- [Streaming Guide](tweepy-v2-streaming-guide.md) - Real-time post streaming with filtered streams
 - [Conversation Moderation](tweepy-v2-conversation-moderation.md) - Guide for moderating conversations with limited Free tier capabilities
 
 ## Available Features in the Free 𝕏 API Plan
@@ -37,11 +37,11 @@ For more details on limitations, see the [Free Tier Limitations](tweepy-v2-free-
 - OAuth 1.0a User Context
 - OAuth 2.0 Authorization Code Flow with PKCE
 
-### Tweets
+### Posts
 
-- Reading tweets by ID (very limited)
-- Posting and deleting tweets
-- Liking, retweeting, and bookmarking (limited)
+- Reading posts by ID (very limited)
+- Posting and deleting posts
+- Liking, reposting, and bookmarking (limited)
 - Hiding replies
 
 ### Users
@@ -79,9 +79,9 @@ client = tweepy.Client(
     access_token_secret="YOUR_ACCESS_TOKEN_SECRET"
 )
 
-# Post a tweet
-response = client.create_tweet(text="Hello, world!")
-print(f"Tweet posted with ID: {response.data['id']}")
+# Post a post
+response = client.create_post(text="Hello, world!")
+print(f"Post posted with ID: {response.data['id']}")
 ```
 
 ## Contributing

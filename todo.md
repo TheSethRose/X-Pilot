@@ -20,7 +20,7 @@ This document outlines all development tasks required to implement the features 
 - [x] Setup core database
   - [x] Design and implement SQLite schema
   - [x] Create database initialization script
-  - [x] Implement data models (User, Tweet, Stream)
+  - [x] Implement data models (User, Post, Stream)
   - [x] Create database migration framework
 
 - [x] Setup basic Flask application
@@ -51,16 +51,16 @@ This document outlines all development tasks required to implement the features 
   - [x] Set up error handling for authentication failures
   - [x] Build login/logout workflow
 
-## Phase 2: Basic Tweet Management (MVP)
+## Phase 2: Basic Post Management (MVP)
 
-- [x] Implement tweet posting
-  - [x] Create tweet composition interface
+- [x] Implement posting
+  - [x] Create post composition interface
   - [x] Implement character count limiter
-  - [x] Set up tweet posting API client
+  - [x] Set up posting API client
   - [x] Implement error handling for API failures
 
-- [x] Create tweet deletion
-  - [x] Implement tweet listing view
+- [x] Create post deletion
+  - [x] Implement post listing view
   - [x] Add deletion confirmation dialog
   - [x] Create deletion API client
   - [x] Handle success/failure states
@@ -111,7 +111,7 @@ This document outlines all development tasks required to implement the features 
   - [x] Design consistent theme variables
   - [x] Implement theme persistence
 
-## Phase 5: Enhanced Tweet Features
+## Phase 5: Enhanced Post Features
 
 - [ ] Media upload functionality
   - [ ] Create media upload interface
@@ -119,17 +119,17 @@ This document outlines all development tasks required to implement the features 
   - [ ] Add support for multiple media items
   - [ ] Build media attachment API integration
 
-- [ ] Tweet reply functionality
+- [ ] Post reply functionality
   - [ ] Create reply composition interface
   - [ ] Implement thread view
   - [ ] Build reply context display
   - [ ] Add reply API client
 
-- [x] Implement tweet scheduling
+- [x] Implement post scheduling
   - [x] Create scheduling interface with datetime picker
-  - [x] Build scheduled tweets database model
+  - [x] Build scheduled posts database model
   - [x] Implement background scheduler service
-  - [x] Create scheduled tweets management view
+  - [x] Create scheduled posts management view
 
 ## Phase 6: Advanced User Management
 
@@ -144,25 +144,25 @@ This document outlines all development tasks required to implement the features 
   - [ ] Implement list creation/editing functionality
   - [ ] Build list member management
   - [ ] Add list viewing capabilities
-  - [ ] Implement list tweet retrieval
+  - [ ] Implement list post retrieval
 
 ## Phase 7: Engagement Features
 
 - [ ] Like/unlike functionality
   - [ ] Add like/unlike buttons
   - [ ] Implement like status tracking
-  - [ ] Create liked tweets view
+  - [ ] Create liked posts view
   - [ ] Build like API client
 
-- [ ] Retweet/unretweet functionality
-  - [ ] Create retweet/unretweet buttons
-  - [ ] Add quote retweet composer
-  - [ ] Implement retweet status tracking
-  - [ ] Build retweet API client
+- [ ] Repost/unrepost functionality
+  - [ ] Create repost/unrepost buttons
+  - [ ] Add quote repost composer
+  - [ ] Implement repost status tracking
+  - [ ] Build repost API client
 
 - [ ] Bookmark functionality
   - [ ] Add bookmark/unbookmark buttons
-  - [ ] Create bookmarked tweets view
+  - [ ] Create bookmarked posts view
   - [ ] Implement bookmark status tracking
   - [ ] Build bookmark API client
 
@@ -178,7 +178,7 @@ This document outlines all development tasks required to implement the features 
   - [ ] Create streaming setup interface
   - [ ] Build rule creation system
   - [ ] Implement streaming client
-  - [ ] Add real-time display of tweets
+  - [ ] Add real-time display of posts
 
 - [ ] Advanced streaming features
   - [ ] Create rule management interface
@@ -197,14 +197,14 @@ This document outlines all development tasks required to implement the features 
 
 - [ ] Basic analytics dashboard
   - [ ] Create engagement metrics visualization
-  - [ ] Implement tweet performance tracking
+  - [ ] Implement post performance tracking
   - [ ] Build follower growth charts
   - [ ] Add best posting time analysis
 
 - [ ] Advanced analytics features
   - [ ] Implement hashtag performance tracking
   - [ ] Create audience analysis tools
-  - [ ] Build comparative metrics for tweets
+  - [ ] Build comparative metrics for posts
   - [ ] Add export functionality for analytics data
 
 ## Phase 10: Automation
@@ -278,21 +278,21 @@ We've made significant progress on our initial goals:
 - ✓ Enhanced user verification status display
 - ✓ Improved error handling for API calls
 - ✓ Added X API free tier compatibility
-- ✓ Updated tweet character limits based on user status
+- ✓ Updated post character limits based on user status
 
 Our next focus is on:
-1. Complete media upload functionality for tweets
-2. Implement reply, like, and retweet features within free tier limits
+1. Complete media upload functionality for posts
+2. Implement reply, like, and repost features within free tier limits
 3. Enhance follower management with pagination support
 4. Optimize API usage to stay within free tier rate limits
-5. Improve scheduled tweets functionality
+5. Improve scheduled posts functionality
 
 ## Sprint Planning Template
 
 | Sprint | Focus | Key Deliverables |
 |--------|-------|------------------|
 | 1 | Project Setup & Auth | Repository, Basic Structure, Auth Flow |
-| 2 | Basic Tweet Management | Tweet Posting, Deletion, Quota Tracking |
+| 2 | Basic Post Management | Post Posting, Deletion, Quota Tracking |
 | 3 | User Profile | Profile View, User Lookup, Follow Management |
 | 4 | MVP Dashboard | Dashboard, Navigation, Theme Support |
 | 5 | Media & Replies | Media Upload, Reply Interface |
@@ -316,9 +316,9 @@ Our next focus is on:
   - [x] Login/logout functional
   - [x] Compatible with X API v2
 
-- [x] Basic Tweet Management
-  - [x] Can post tweets
-  - [x] Can delete tweets
+- [x] Basic Post Management
+  - [x] Can posts
+  - [x] Can delete posts
   - [x] Quota tracker working
   - [x] Dynamic character limits based on user verification status
 

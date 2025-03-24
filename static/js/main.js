@@ -18,22 +18,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // Character counter for tweet composition
-    const tweetTextArea = document.getElementById('tweet-content');
+    // Character counter for post composition
+    const postTextArea = document.getElementById('post-content');
     const charCounter = document.getElementById('char-counter');
-    if (tweetTextArea && charCounter) {
+    if (postTextArea && charCounter) {
         const maxLength = 280;
 
-        tweetTextArea.addEventListener('input', function() {
+        postTextArea.addEventListener('input', function() {
             const remaining = maxLength - this.value.length;
             charCounter.textContent = remaining;
 
             if (remaining < 0) {
                 charCounter.classList.add('text-danger');
-                document.getElementById('tweet-submit').disabled = true;
+                document.getElementById('post-submit').disabled = true;
             } else {
                 charCounter.classList.remove('text-danger');
-                document.getElementById('tweet-submit').disabled = false;
+                document.getElementById('post-submit').disabled = false;
             }
         });
     }

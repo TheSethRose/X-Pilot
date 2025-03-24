@@ -36,7 +36,7 @@ print(f"Verified: {user.verified}")
 metrics = user.public_metrics
 print(f"Followers: {metrics['followers_count']}")
 print(f"Following: {metrics['following_count']}")
-print(f"Tweets: {metrics['tweet_count']}")
+print(f"Posts: {metrics['post_count']}")
 print(f"Listed: {metrics['listed_count']}")
 ```
 
@@ -89,7 +89,7 @@ print(f"Authenticated as: {user.name} (@{user.username})")
 print(f"Bio: {user.description}")
 print(f"Followers: {user.public_metrics['followers_count']}")
 print(f"Following: {user.public_metrics['following_count']}")
-print(f"Tweets: {user.public_metrics['tweet_count']}")
+print(f"Posts: {user.public_metrics['post_count']}")
 ```
 
 ## Managing User Relationships
@@ -265,7 +265,7 @@ for user in muted.data:
     print(f"- {user.name} (@{user.username})")
 ```
 
-## Getting User's Tweets
+## Getting User's Posts
 
 ### Get User's Timeline
 
@@ -274,18 +274,18 @@ import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get a user's most recent tweets
-tweets = client.get_users_tweets(
+# Get a user's most recent posts
+posts = client.get_users_posts(
     id="12345678901234567890",  # Replace with actual user ID
     max_results=10,
-    tweet_fields=["created_at", "public_metrics"],
-    exclude=["retweets", "replies"]  # Exclude retweets and replies
+    post_fields=["created_at", "public_metrics"],
+    exclude=["reposts", "replies"]  # Exclude reposts and replies
 )
 
-print(f"Recent tweets:")
-for tweet in tweets.data:
-    print(f"[{tweet.created_at}] {tweet.text}")
-    print(f"Likes: {tweet.public_metrics['like_count']} | Retweets: {tweet.public_metrics['retweet_count']}")
+print(f"Recent posts:")
+for post in posts.data:
+    print(f"[{post.created_at}] {post.text}")
+    print(f"Likes: {post.public_metrics['like_count']} | Reposts: {post.public_metrics['repost_count']}")
     print("---")
 ```
 
@@ -296,23 +296,23 @@ import tweepy
 
 client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
 
-# Get tweets mentioning a user
+# Get posts mentioning a user
 mentions = client.get_users_mentions(
     id="12345678901234567890",  # Replace with actual user ID
     max_results=10,
-    tweet_fields=["created_at", "author_id"],
+    post_fields=["created_at", "author_id"],
     expansions=["author_id"],
     user_fields=["username"]
 )
 
 print(f"Recent mentions:")
-for tweet in mentions.data:
+for post in mentions.data:
     # Find the author
-    author = next((user for user in mentions.includes["users"] if user.id == tweet.author_id), None)
+    author = next((user for user in mentions.includes["users"] if user.id == post.author_id), None)
     username = author.username if author else "unknown"
 
-    print(f"@{username}: {tweet.text}")
-    print(f"Date: {tweet.created_at}")
+    print(f"@{username}: {post.text}")
+    print(f"Date: {post.created_at}")
     print("---")
 ```
 
@@ -362,9 +362,9 @@ user = client.get_user(
         "id",                   # The user's ID
         "location",             # User's location
         "name",                 # Display name
-        "pinned_tweet_id",      # ID of pinned tweet
+        "pinned_post_id",      # ID of pinned post
         "profile_image_url",    # Profile image
-        "protected",            # Whether tweets are protected
+        "protected",            # Whether posts are protected
         "public_metrics",       # Follower/following counts etc.
         "url",                  # URL in user's profile
         "username",             # @handle
@@ -392,11 +392,11 @@ print("\nMetrics:")
 metrics = user_data.public_metrics
 print(f"- Followers: {metrics['followers_count']}")
 print(f"- Following: {metrics['following_count']}")
-print(f"- Tweets: {metrics['tweet_count']}")
+print(f"- Posts: {metrics['post_count']}")
 print(f"- Listed: {metrics['listed_count']}")
 
-if hasattr(user_data, 'pinned_tweet_id'):
-    print(f"\nPinned tweet ID: {user_data.pinned_tweet_id}")
+if hasattr(user_data, 'pinned_post_id'):
+    print(f"\nPinned post ID: {user_data.pinned_post_id}")
 ```
 
 ## Tips and Best Practices
