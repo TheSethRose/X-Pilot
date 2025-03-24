@@ -6,7 +6,7 @@
 <div class="landing-container">
     <div class="hero-section">
         <h1>Welcome to 𝕏-Pilot</h1>
-        <p class="tagline">Maximize your 𝕏 experience within the free API tier</p>
+        <p class="tagline">Your complete Twitter management solution</p>
 
         <div class="hero-actions">
             <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Get Started</a>
@@ -20,22 +20,22 @@
         <div class="feature-grid">
             <div class="feature-card">
                 <h3>Post & Schedule Tweets</h3>
-                <p>Compose and schedule tweets to be posted at optimal times.</p>
+                <p>Compose and schedule tweets through our intuitive interface.</p>
             </div>
 
             <div class="feature-card">
-                <h3>Manage Relationships</h3>
-                <p>Track followers and manage your network efficiently.</p>
+                <h3>Delete Tweets</h3>
+                <p>Easily remove posted tweets when they're no longer needed.</p>
             </div>
 
             <div class="feature-card">
                 <h3>Quota Tracking</h3>
-                <p>Monitor your API usage to stay within free tier limits.</p>
+                <p>Monitor your API usage with our built-in quota tracker.</p>
             </div>
 
             <div class="feature-card">
-                <h3>User Insights</h3>
-                <p>View key metrics about your 𝕏 presence.</p>
+                <h3>View Your Profile</h3>
+                <p>See your X profile information and basic statistics within the app.</p>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
     }
 
     .features-section h2 {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         color: var(--primary-color);
     }
 
@@ -96,6 +96,12 @@
         border-radius: 8px;
         padding: 1.5rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
     .feature-card h3 {

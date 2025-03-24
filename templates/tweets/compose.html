@@ -19,11 +19,14 @@
                 id="tweet-text"
                 class="tweet-input"
                 placeholder="What's on your mind?"
-                maxlength="280"
+                maxlength="{{ char_limit|default(280) }}"
                 required
-            >{{ form.text.data if form.text.data }}</textarea>
+            >{{ text if text is defined else '' }}</textarea>
             <div class="character-counter">
-                <span id="char-count">0</span>/280
+                <span id="char-count">0</span>/<span id="char-limit">{{ char_limit|default(280) }}</span>
+                {% if premium|default(false) %}
+                <span class="premium-badge">Premium</span>
+                {% endif %}
             </div>
         </div>
 
@@ -61,35 +64,55 @@
     document.addEventListener('DOMContentLoaded', function() {
         const tweetText = document.getElementById('tweet-text');
         const charCount = document.getElementById('char-count');
+        const charLimit = document.getElementById('char-limit');
         const tweetButton = document.getElementById('tweet-button');
         const scheduleCheckbox = document.getElementById('schedule');
         const scheduleDetails = document.getElementById('schedule-details');
 
+        // Get character limit from the template
+        const maxCharacters = parseInt(charLimit.textContent, 10) || 280;
+
         // Character counter
         tweetText.addEventListener('input', function() {
-            const count = this.value.length;
+            updateCharCount();
+        });
+
+        // Function to update character count
+        function updateCharCount() {
+            const count = tweetText.value.length;
             charCount.textContent = count;
 
-            if (count > 280) {
+            if (count > maxCharacters) {
                 charCount.classList.add('over-limit');
                 tweetButton.disabled = true;
             } else {
                 charCount.classList.remove('over-limit');
                 tweetButton.disabled = false;
             }
-        });
+        }
 
         // Initialize character count
-        charCount.textContent = tweetText.value.length;
+        updateCharCount();
 
         // Show/hide schedule options
         scheduleCheckbox.addEventListener('change', function() {
+            const scheduleDate = document.getElementById('schedule-date');
+            const scheduleTime = document.getElementById('schedule-time');
+
             if (this.checked) {
                 scheduleDetails.classList.remove('hidden');
                 tweetButton.textContent = 'Schedule';
+
+                // Enable schedule fields
+                scheduleDate.disabled = false;
+                scheduleTime.disabled = false;
             } else {
                 scheduleDetails.classList.add('hidden');
                 tweetButton.textContent = 'Tweet';
+
+                // Disable schedule fields so they won't be submitted with the form
+                scheduleDate.disabled = true;
+                scheduleTime.disabled = true;
             }
         });
 
@@ -104,6 +127,12 @@
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         document.getElementById('schedule-time').value = `${hours}:${minutes}`;
+
+        // Initialize schedule fields state based on checkbox
+        const scheduleDate = document.getElementById('schedule-date');
+        const scheduleTime = document.getElementById('schedule-time');
+        scheduleDate.disabled = !scheduleCheckbox.checked;
+        scheduleTime.disabled = !scheduleCheckbox.checked;
     });
 </script>
 {% endblock %}
@@ -149,6 +178,19 @@
         margin-top: 0.5rem;
         font-size: 0.875rem;
         color: var(--secondary-color);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .premium-badge {
+        background-color: #f7c427;
+        color: #333;
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
     }
 
     .over-limit {

@@ -52,33 +52,51 @@ def profile():
             # Following tweepy's client.get_user documentation format
             user_data = client.get_user(
                 username=current_user.username,
-                user_fields=["description", "created_at", "profile_image_url", "public_metrics"]
+                user_fields=["description", "created_at", "profile_image_url", "public_metrics", "verified", "verified_type"]
             )
 
             # Log the response structure to debug
             current_app.logger.debug(f"User data response: {user_data}")
 
             # If we successfully got data, update our profile_data
-            if user_data and hasattr(user_data, 'data') and user_data.data:
-                user = user_data.data
-                current_app.logger.info(f"Successfully fetched profile data for {current_user.username}")
+            # Handle the tweepy Response object properly
+            if user_data:
+                # Use getattr to safely access the data attribute
+                user_data_dict = getattr(user_data, 'data', None)
+                if user_data_dict:
+                    user = user_data_dict
+                    current_app.logger.info(f"Successfully fetched profile data for {current_user.username}")
 
-                # Try to extract metrics if they exist
-                try:
-                    metrics = {}
-                    if hasattr(user, 'public_metrics'):
-                        metrics = user.public_metrics
+                    # Try to extract metrics if they exist
+                    try:
+                        metrics = {}
+                        if hasattr(user, 'public_metrics'):
+                            metrics = user.public_metrics
 
-                    # Update profile data with real metrics from Twitter
-                    profile_data.update({
-                        'following_count': metrics.get('following_count', 0),
-                        'followers_count': metrics.get('followers_count', 0),
-                        'tweet_count': metrics.get('tweet_count', 0),
-                        'created_at': getattr(user, 'created_at', profile_data['created_at']),
-                        'description': getattr(user, 'description', profile_data['description'])
-                    })
-                except Exception as metrics_error:
-                    current_app.logger.error(f"Error extracting metrics: {metrics_error}")
+                        # Save verification status to the user model
+                        if hasattr(user, 'verified'):
+                            current_user.is_verified = user.verified
+
+                        # Save verification type to the user model
+                        if hasattr(user, 'verified_type'):
+                            current_user.verified_type = user.verified_type
+
+                        # Update profile data with real metrics from Twitter
+                        profile_data.update({
+                            'following_count': metrics.get('following_count', 0),
+                            'followers_count': metrics.get('followers_count', 0),
+                            'tweet_count': metrics.get('tweet_count', 0),
+                            'created_at': getattr(user, 'created_at', profile_data['created_at']),
+                            'description': getattr(user, 'description', profile_data['description']),
+                            'verified': getattr(user, 'verified', False),
+                            'verified_type': getattr(user, 'verified_type', None)
+                        })
+
+                        # Save changes to user model
+                        db.session.commit()
+
+                    except Exception as metrics_error:
+                        current_app.logger.error(f"Error extracting metrics: {metrics_error}")
 
         except Exception as api_error:
             current_app.logger.error(f"Error fetching profile from Twitter API: {str(api_error)}")

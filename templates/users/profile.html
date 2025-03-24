@@ -14,7 +14,18 @@
         </div>
         <div class="profile-info">
             <h1>{{ current_user.name }}</h1>
-            <p class="username">@{{ current_user.username }}</p>
+            <p class="username">
+                @{{ current_user.username }}
+                {% if profile_data and (profile_data.verified or profile_data.verified_type) %}
+                <span class="premium-badge">
+                    {% if profile_data.verified_type %}
+                        {{ profile_data.verified_type }}
+                    {% else %}
+                        𝕏 Premium
+                    {% endif %}
+                </span>
+                {% endif %}
+            </p>
             {% if profile_data and profile_data.description %}
             <p class="bio">{{ profile_data.description }}</p>
             {% endif %}
@@ -54,6 +65,20 @@
                 <div class="detail">
                     <span class="label">Last Login:</span>
                     <span class="value">{% if current_user.last_login %}{{ current_user.last_login.strftime('%B %d, %Y at %H:%M') }}{% else %}Not available{% endif %}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Status:</span>
+                    <span class="value">
+                        {% if profile_data and profile_data.verified %}
+                            {% if profile_data.verified_type %}
+                                <span class="status-tag verified">{{ profile_data.verified_type }}</span>
+                            {% else %}
+                                <span class="status-tag verified">𝕏 Premium</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="status-tag">Standard Account</span>
+                        {% endif %}
+                    </span>
                 </div>
             </div>
         </div>
@@ -130,6 +155,21 @@
     .username {
         color: var(--dark-gray);
         margin: 0.25rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .premium-badge {
+        background-color: #f7c427;
+        color: #333;
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        display: inline-flex;
+        align-items: center;
+        text-transform: capitalize;
     }
 
     .profile-stats {
@@ -182,6 +222,21 @@
     .account-details .label {
         font-weight: bold;
         width: 100px;
+    }
+
+    .status-tag {
+        display: inline-block;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        background-color: var(--light-gray);
+    }
+
+    .status-tag.verified {
+        background-color: #f7c427;
+        color: #333;
+        font-weight: bold;
+        text-transform: capitalize;
     }
 
     .quota-bar {

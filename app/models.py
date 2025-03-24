@@ -15,6 +15,10 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(128), nullable=False)
     profile_image_url = db.Column(db.String(256), nullable=True)
 
+    # Verification info
+    is_verified = db.Column(db.Boolean, default=False)
+    verified_type = db.Column(db.String(64), nullable=True)
+
     # Authentication data
     consumer_key = db.Column(db.String(64), nullable=False)
     consumer_secret = db.Column(db.String(64), nullable=False)
@@ -40,7 +44,7 @@ class Tweet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     twitter_id = db.Column(db.String(64), unique=True, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    text = db.Column(db.String(280), nullable=False)
+    text = db.Column(db.Text, nullable=False)
 
     # Media attachments could be stored as JSON string
     media_attachments = db.Column(db.Text, nullable=True)

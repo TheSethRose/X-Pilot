@@ -26,24 +26,34 @@ def compose():
 
         if not text:
             flash('Tweet content cannot be empty.', 'error')
-            return render_template('tweets/compose.html')
+            return render_template('tweets/compose.html', text='')
 
-        if len(text) > 280:
-            flash('Tweet exceeds 280 character limit.', 'error')
-            return render_template('tweets/compose.html', text=text)
+        # Check if user has X Premium/Blue (verified) to determine character limit
+        # X Premium/Blue users can post up to 4000/10000 characters depending on their tier
+        # Regular users are limited to 280 characters
+        is_premium_user = current_user.is_verified or current_user.verified_type in ['Business', 'Government', 'Blue']
+        char_limit = 4000 if is_premium_user else 280
+
+        if len(text) > char_limit:
+            flash(f'Tweet exceeds {char_limit} character limit for your account type.', 'error')
+            return render_template('tweets/compose.html', text=text, premium=is_premium_user, char_limit=char_limit)
 
         # Check if scheduling is requested
+        schedule_checkbox = request.form.get('schedule')
         schedule_date = request.form.get('schedule_date')
         schedule_time = request.form.get('schedule_time')
 
-        if schedule_date and schedule_time:
+        if schedule_checkbox and schedule_date and schedule_time:
             # Create a scheduled tweet
             try:
                 scheduled_at = datetime.strptime(f"{schedule_date} {schedule_time}", "%Y-%m-%d %H:%M")
 
                 if scheduled_at <= datetime.utcnow():
                     flash('Scheduled time must be in the future.', 'error')
-                    return render_template('tweets/compose.html', text=text)
+                    return render_template('tweets/compose.html',
+                                          text=text,
+                                          premium=is_premium_user,
+                                          char_limit=char_limit)
 
                 # Create a scheduled tweet
                 tweet = Tweet()
@@ -59,16 +69,23 @@ def compose():
 
             except ValueError:
                 flash('Invalid date or time format.', 'error')
-                return render_template('tweets/compose.html', text=text)
+                return render_template('tweets/compose.html',
+                                      text=text,
+                                      premium=is_premium_user,
+                                      char_limit=char_limit)
         else:
             # Post tweet immediately
             try:
                 # Check quota before posting
                 quota_status = QuotaTracker.get_quota_status(current_user)
 
-                if quota_status['posts_used'] >= quota_status['limit']:
+                if quota_status['posts_used'] >= quota_status['monthly_limit']:
                     flash('API quota limit reached. Cannot post tweet.', 'error')
-                    return render_template('tweets/compose.html', text=text, quota=quota_status)
+                    return render_template('tweets/compose.html',
+                                          text=text,
+                                          quota=quota_status,
+                                          premium=is_premium_user,
+                                          char_limit=char_limit)
 
                 # Post to Twitter
                 auth = tweepy.OAuth1UserHandler(
@@ -77,13 +94,31 @@ def compose():
                     current_user.access_token,
                     current_user.access_token_secret
                 )
-                api = tweepy.API(auth)
-                twitter_response = api.update_status(text)
+
+                # Use v2 Client instead of v1.1 API
+                client = tweepy.Client(
+                    consumer_key=current_user.consumer_key,
+                    consumer_secret=current_user.consumer_secret,
+                    access_token=current_user.access_token,
+                    access_token_secret=current_user.access_token_secret
+                )
+
+                # Use create_tweet method from v2 API instead of update_status
+                twitter_response = client.create_tweet(text=text)
+
+                # Safely get the data from the response
+                response_data = getattr(twitter_response, 'data', None)
+                if response_data:
+                    tweet_id = response_data['id']
+                else:
+                    # Fallback for unexpected response format
+                    current_app.logger.warning("Unexpected response format from Twitter API")
+                    tweet_id = str(datetime.utcnow().timestamp())  # Use timestamp as fallback ID
 
                 # Record the tweet in our database
                 tweet = Tweet()
                 tweet.user_id = current_user.id
-                tweet.twitter_id = str(twitter_response.id)
+                tweet.twitter_id = tweet_id
                 tweet.text = text
                 tweet.status = 'posted'
                 tweet.posted_at = datetime.utcnow()
@@ -100,15 +135,30 @@ def compose():
             except tweepy.TweepyException as e:
                 current_app.logger.error(f"Twitter API error: {str(e)}")
                 flash(f'Error posting tweet: {str(e)}', 'error')
-                return render_template('tweets/compose.html', text=text)
+                return render_template('tweets/compose.html',
+                                      text=text,
+                                      premium=is_premium_user,
+                                      char_limit=char_limit)
             except Exception as e:
                 current_app.logger.error(f"Unexpected error: {str(e)}")
                 flash('An unexpected error occurred.', 'error')
-                return render_template('tweets/compose.html', text=text)
+                return render_template('tweets/compose.html',
+                                      text=text,
+                                      premium=is_premium_user,
+                                      char_limit=char_limit)
 
     # Get quota information for the user
     quota_status = QuotaTracker.get_quota_status(current_user)
-    return render_template('tweets/compose.html', quota=quota_status)
+
+    # Check if user has X Premium/Blue (verified) to determine character limit
+    is_premium_user = current_user.is_verified or current_user.verified_type in ['Business', 'Government', 'Blue']
+    char_limit = 4000 if is_premium_user else 280
+
+    return render_template('tweets/compose.html',
+                          quota=quota_status,
+                          text='',
+                          premium=is_premium_user,
+                          char_limit=char_limit)
 
 @tweets_bp.route('/<int:tweet_id>/delete', methods=['POST'])
 @login_required
@@ -124,26 +174,30 @@ def delete(tweet_id):
     try:
         # If the tweet has been posted to Twitter, delete it there too
         if tweet.status == 'posted' and tweet.twitter_id:
-            auth = tweepy.OAuth1UserHandler(
-                current_user.consumer_key,
-                current_user.consumer_secret,
-                current_user.access_token,
-                current_user.access_token_secret
-            )
-            api = tweepy.API(auth)
-            api.destroy_status(tweet.twitter_id)
+            try:
+                # Use v2 Client instead of v1.1 API
+                client = tweepy.Client(
+                    consumer_key=current_user.consumer_key,
+                    consumer_secret=current_user.consumer_secret,
+                    access_token=current_user.access_token,
+                    access_token_secret=current_user.access_token_secret
+                )
 
-            # Track API usage (deletion counts as an API call)
-            QuotaTracker.track_api_call(current_user, "post")
+                # Use delete_tweet method from v2 API
+                client.delete_tweet(tweet.twitter_id)
+
+                # Track API usage (deletion counts as an API call)
+                QuotaTracker.track_api_call(current_user, "post")
+            except Exception as twitter_error:
+                current_app.logger.error(f"Twitter API error: {str(twitter_error)}")
+                flash(f'Warning: Tweet deleted from database but could not be removed from X: {str(twitter_error)}', 'warning')
+                # Continue to delete from our database even if Twitter API fails
 
         # Delete from our database
         db.session.delete(tweet)
         db.session.commit()
 
         flash('Tweet deleted successfully.', 'success')
-    except tweepy.TweepyException as e:
-        flash(f'Error deleting tweet: {str(e)}', 'error')
-        current_app.logger.error(f"Twitter API error: {str(e)}")
     except Exception as e:
         flash('An unexpected error occurred.', 'error')
         current_app.logger.error(f"Unexpected error: {str(e)}")
