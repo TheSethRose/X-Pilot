@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-**𝕏-Pilot** is a frontend interface for Tweepy, designed to help users manage their Twitter (𝕏) account within the limitations of the Free Twitter API tier. The application provides a user-friendly interface to Twitter's write functionality, helping users post tweets, manage relationships, and utilize the available read operations efficiently.
+**𝕏-Pilot** is a frontend interface for Tweepy, designed to help users manage their 𝕏 (𝕏) account within the limitations of the Free 𝕏 API tier. The application provides a user-friendly interface to Twitter's write functionality, helping users post tweets, manage relationships, and utilize the available read operations efficiently.
 
 ## 2. Background
 

@@ -1,6 +1,6 @@
-# Working with Tweets in Tweepy for Twitter API v2
+# Working with Tweets in Tweepy for 𝕏 API v2
 
-This guide covers how to work with tweets using Tweepy and the Twitter API v2, focusing on the capabilities available with the Free 𝕏 API Plan.
+This guide covers how to work with tweets using Tweepy and the 𝕏 API v2, focusing on the capabilities available with the Free 𝕏 API Plan.
 
 ## Reading Tweets
 
@@ -93,7 +93,7 @@ else:
         author = next((user for user in search_results.includes["users"] if user.id == tweet.author_id), None)
         username = author.username if author else "unknown"
         verified = "✓" if author and author.verified else ""
-        
+
         print(f"@{username} {verified}: {tweet.text}")
         print(f"Likes: {tweet.public_metrics['like_count']} | Retweets: {tweet.public_metrics['retweet_count']}")
         print(f"Created at: {tweet.created_at}")
@@ -116,7 +116,7 @@ client = tweepy.Client(
 )
 
 # Post a simple tweet
-response = client.create_tweet(text="Hello, Twitter API v2!")
+response = client.create_tweet(text="Hello, 𝕏 API v2!")
 print(f"Tweet posted with ID: {response.data['id']}")
 
 # Post a tweet with a poll
@@ -293,14 +293,14 @@ for quote in quotes.data:
     # Find the author
     author = next((user for user in quotes.includes["users"] if user.id == quote.author_id), None)
     username = author.username if author else "unknown"
-    
+
     print(f"@{username}: {quote.text}")
     print("---")
 ```
 
 ## Working with Media
 
-Note: For media uploads with the Twitter API v2, you need to use the v1.1 media upload endpoint and then reference the media ID in your v2 tweet creation.
+Note: For media uploads with the 𝕏 API v2, you need to use the v1.1 media upload endpoint and then reference the media ID in your v2 tweet creation.
 
 ```python
 import tweepy

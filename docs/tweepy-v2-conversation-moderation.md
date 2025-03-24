@@ -1,6 +1,6 @@
-# Conversation Moderation with Tweepy and Twitter API v2
+# Conversation Moderation with Tweepy and 𝕏 API v2
 
-This guide explores conversation moderation capabilities available through Tweepy and the Twitter API v2, with a focus on what's possible within the Free 𝕏 API Plan.
+This guide explores conversation moderation capabilities available through Tweepy and the 𝕏 API v2, with a focus on what's possible within the Free 𝕏 API Plan.
 
 ## Moderation Capabilities Overview
 
@@ -138,14 +138,14 @@ user_id = me.data.id
 def moderate_own_tweets():
     # This would normally use get_users_tweets, but that's limited in Free tier
     # Instead, maintain a local database of your tweets
-    
+
     # For each tweet you've posted (from your local tracking)
     tweet_id = "1234567890"  # This would come from your local tracking
-    
+
     # Check for any replies that need moderation
     # With Free tier, this would be a very manual process
     reply_to_hide = input(f"Enter ID of reply to tweet {tweet_id} to hide (or press enter to skip): ")
-    
+
     if reply_to_hide:
         try:
             client.hide_reply(reply_to_hide)
@@ -170,12 +170,12 @@ If you have a website where users authenticate with "Login with X" (available in
 def report_reply():
     tweet_id = request.form["tweet_id"]
     reply_id = request.form["reply_id"]
-    
+
     # Verify the tweet belongs to the authenticated user
-    
+
     # Hide the reply if appropriate
     client.hide_reply(reply_id)
-    
+
     return "Reply hidden"
 ```
 

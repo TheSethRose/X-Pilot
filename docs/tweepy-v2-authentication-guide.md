@@ -1,6 +1,6 @@
-# Tweepy Authentication Guide for Twitter API v2
+# Tweepy Authentication Guide for 𝕏 API v2
 
-This guide covers the authentication methods available for the Twitter API v2 using Tweepy, with a focus on the Free 𝕏 API Plan.
+This guide covers the authentication methods available for the 𝕏 API v2 using Tweepy, with a focus on the Free 𝕏 API Plan.
 
 ## Available Authentication Methods
 
@@ -12,7 +12,7 @@ Twitter API v2 supports several authentication methods, each with different capa
 
 ## OAuth 2.0 Bearer Token (App-Only)
 
-This is the simplest method to authenticate with the Twitter API v2. It provides read-only access to public information.
+This is the simplest method to authenticate with the 𝕏 API v2. It provides read-only access to public information.
 
 ### Step 1: Get Your Bearer Token
 
@@ -68,7 +68,7 @@ client = tweepy.Client(
 )
 
 # Test by posting a tweet
-response = client.create_tweet(text="Testing Twitter API v2 with OAuth 1.0a!")
+response = client.create_tweet(text="Testing 𝕏 API v2 with OAuth 1.0a!")
 print(f"Tweet posted with ID: {response.data['id']}")
 ```
 

@@ -1,47 +1,117 @@
 {% extends 'base.html' %}
 
-{% block title %}𝕏Pilot - Manage Your Twitter Account{% endblock %}
+{% block title %}Home - 𝕏-Pilot{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <h1>𝕏Pilot</h1>
-    <p class="lead">Maximize your Twitter experience with the Free API tier</p>
+<div class="landing-container">
+    <div class="hero-section">
+        <h1>Welcome to 𝕏-Pilot</h1>
+        <p class="tagline">Maximize your 𝕏 experience within the free API tier</p>
 
-    {% if current_user.is_authenticated %}
-    <a href="{{ url_for('main.dashboard') }}" class="btn">Go to Dashboard</a>
-    {% else %}
-    <a href="{{ url_for('auth.login') }}" class="btn">Get Started</a>
-    {% endif %}
+        <div class="hero-actions">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Get Started</a>
+            <a href="#features" class="btn btn-secondary">Learn More</a>
+        </div>
+    </div>
+
+    <div id="features" class="features-section">
+        <h2>What You Can Do</h2>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Post & Schedule Tweets</h3>
+                <p>Compose and schedule tweets to be posted at optimal times.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Manage Relationships</h3>
+                <p>Track followers and manage your network efficiently.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Quota Tracking</h3>
+                <p>Monitor your API usage to stay within free tier limits.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>User Insights</h3>
+                <p>View key metrics about your 𝕏 presence.</p>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
 
-<div class="features">
-    <div class="feature-card">
-        <h2>Compose and Schedule</h2>
-        <p>Create tweets and schedule them for later posting. Manage your content calendar efficiently.</p>
-    </div>
+{% block extra_css %}
+<style>
+    .landing-container {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
 
-    <div class="feature-card">
-        <h2>Manage Relationships</h2>
-        <p>Follow, unfollow, and manage your Twitter connections with ease.</p>
-    </div>
+    .hero-section {
+        text-align: center;
+        padding: 4rem 1rem;
+        margin-bottom: 2rem;
+    }
 
-    <div class="feature-card">
-        <h2>Track Engagement</h2>
-        <p>Monitor engagement metrics and understand how your content performs.</p>
-    </div>
+    .hero-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
 
-    <div class="feature-card">
-        <h2>Stream Monitoring</h2>
-        <p>Set up filtered streams to monitor keywords and topics relevant to you.</p>
-    </div>
-</div>
+    .tagline {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        color: var(--dark-gray);
+    }
 
-<div class="cta-section">
-    <h2>Start Managing Your Twitter Presence Today</h2>
-    <p>𝕏Pilot helps you make the most of Twitter's Free API tier.</p>
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
 
-    {% if not current_user.is_authenticated %}
-    <a href="{{ url_for('auth.login') }}" class="btn">Connect Your Account</a>
-    {% endif %}
-</div>
+    .features-section {
+        padding: 3rem 1rem;
+        text-align: center;
+    }
+
+    .features-section h2 {
+        margin-bottom: 2rem;
+        color: var(--primary-color);
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .feature-card {
+        background-color: var(--very-light-gray);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {% endblock %}

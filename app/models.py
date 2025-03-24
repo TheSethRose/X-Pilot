@@ -6,7 +6,7 @@ import json
 db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
-    """User model for Twitter authentication."""
+    """User model for𝕏authentication."""
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)

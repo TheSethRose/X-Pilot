@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - 𝕏-Pilot{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Connect to Twitter</h1>
+        <p>Sign in with your 𝕏 account to get started.</p>
+
+        <form action="{{ url_for('auth.login') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-twitter">
+                <span>Connect with Twitter</span>
+            </button>
+        </form>
+
+        <div class="auth-info">
+            <p>By connecting your account, you'll be able to:</p>
+            <ul>
+                <li>Post tweets from 𝕏-Pilot</li>
+                <li>Manage your followers and following</li>
+                <li>Schedule tweets for later</li>
+                <li>Track engagement metrics</li>
+            </ul>
+
+            <div class="privacy-note">
+                <p><strong>Your data is safe</strong> - 𝕏-Pilot stores your auth tokens locally and never shares your information.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 200px);
+    }
+
+    .auth-card {
+        background-color: var(--very-light-gray);
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 500px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-card h1 {
+        color: var(--primary-color);
+        margin-top: 0;
+    }
+
+    .btn-twitter {
+        width: 100%;
+        margin: 1.5rem 0;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+    }
+
+    .auth-info {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--light-gray);
+    }
+
+    .auth-info ul {
+        margin-left: 1.5rem;
+    }
+
+    .privacy-note {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: rgba(23, 191, 99, 0.1);
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}

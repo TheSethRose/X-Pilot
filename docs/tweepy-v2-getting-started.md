@@ -1,13 +1,13 @@
-# Getting Started with Tweepy and Twitter API v2
+# Getting Started with Tweepy and 𝕏 API v2
 
-This guide provides a quick introduction to using Tweepy with the Twitter (𝕏) API v2, focusing specifically on the Free API tier. It covers the essential steps to get your application up and running.
+This guide provides a quick introduction to using Tweepy with the 𝕏 (𝕏) API v2, focusing specifically on the Free API tier. It covers the essential steps to get your application up and running.
 
 ## Prerequisites
 
 Before you begin, you'll need:
 
 1. Python 3.7 or later
-2. A Twitter Developer account
+2. A 𝕏 Developer account
 3. An approved developer app with API credentials
 
 ## Installation
@@ -67,7 +67,7 @@ client = tweepy.Client(
 )
 
 # Test posting a tweet (requires user context)
-response = client.create_tweet(text="Hello, Twitter API v2!")
+response = client.create_tweet(text="Hello, 𝕏 API v2!")
 print(f"Tweet posted with ID: {response.data['id']}")
 ```
 

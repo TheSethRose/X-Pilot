@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Profile - 𝕏-Pilot{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-image">
+            {% if current_user.profile_image_url %}
+            <img src="{{ current_user.profile_image_url }}" alt="{{ current_user.username }}" class="avatar">
+            {% else %}
+            <div class="avatar-placeholder">{{ current_user.username[0].upper() }}</div>
+            {% endif %}
+        </div>
+        <div class="profile-info">
+            <h1>{{ current_user.name }}</h1>
+            <p class="username">@{{ current_user.username }}</p>
+            <div class="profile-stats">
+                <div class="stat">
+                    <span class="stat-value">-</span>
+                    <span class="stat-label">Following</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">-</span>
+                    <span class="stat-label">Followers</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">{{ current_user.tweets|length }}</span>
+                    <span class="stat-label">Tweets</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <a href="{{ url_for('tweets.compose') }}" class="btn">Compose Tweet</a>
+    </div>
+
+    <div class="profile-sections">
+        <div class="section">
+            <h2>Account Information</h2>
+            <div class="account-details">
+                <div class="detail">
+                    <span class="label">User ID:</span>
+                    <span class="value">{{ current_user.twitter_id }}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Joined:</span>
+                    <span class="value">{{ current_user.created_at.strftime('%B %d, %Y') }}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Last Login:</span>
+                    <span class="value">{% if current_user.last_login %}{{ current_user.last_login.strftime('%B %d, %Y at %H:%M') }}{% else %}Not available{% endif %}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>API Usage</h2>
+            <div class="quota-status">
+                <div class="quota-bar">
+                    <div class="quota-progress" style="width: 0%"></div>
+                </div>
+                <p>Monthly API usage: <strong>0/1500</strong> posts</p>
+                <p class="quota-reset">Resets on: <strong>Not available</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-image {
+        margin-right: 2rem;
+    }
+
+    .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+    }
+
+    .profile-info h1 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .username {
+        color: var(--dark-gray);
+        margin: 0.25rem 0 1rem;
+    }
+
+    .profile-stats {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-value {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        color: var(--dark-gray);
+        font-size: 0.9rem;
+    }
+
+    .profile-actions {
+        margin-bottom: 2rem;
+    }
+
+    .profile-sections {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .section {
+        background-color: var(--very-light-gray);
+        border-radius: 8px;
+        padding: 1.5rem;
+    }
+
+    .section h2 {
+        margin-top: 0;
+        color: var(--primary-color);
+        font-size: 1.4rem;
+    }
+
+    .account-details .detail {
+        margin-bottom: 0.75rem;
+        display: flex;
+    }
+
+    .account-details .label {
+        font-weight: bold;
+        width: 100px;
+    }
+
+    .quota-bar {
+        height: 10px;
+        background-color: var(--light-gray);
+        border-radius: 5px;
+        margin-bottom: 0.75rem;
+    }
+
+    .quota-progress {
+        height: 100%;
+        background-color: var(--primary-color);
+        border-radius: 5px;
+    }
+
+    .quota-reset {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    @media (min-width: 768px) {
+        .profile-sections {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}

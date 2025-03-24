@@ -1,6 +1,6 @@
-# Twitter (𝕏) API Free Tier Limitations with Tweepy
+# 𝕏 (𝕏) API Free Tier Limitations with Tweepy
 
-This guide outlines the specific limitations of the Twitter (𝕏) API Free Tier and how they apply when using Tweepy. Understanding these limitations is crucial for developing applications that comply with Twitter's terms of service.
+This guide outlines the specific limitations of the 𝕏 (𝕏) API Free Tier and how they apply when using Tweepy. Understanding these limitations is crucial for developing applications that comply with Twitter's terms of service.
 
 ## Official Free Tier Limitations
 
@@ -41,7 +41,7 @@ client.create_tweet(text="This is a reply", in_reply_to_tweet_id="1234567890")
 The Free Tier is designed primarily for testing and limited post creation. This means you can:
 
 1. Test authentication flows
-2. Test tweet posting functionality 
+2. Test tweet posting functionality
 3. Validate your app's integration with Twitter
 
 ### Limited Read Access
@@ -82,24 +82,24 @@ import sqlite3
 def log_tweet_creation(tweet_id, user_id):
     conn = sqlite3.connect('tweet_log.db')
     c = conn.cursor()
-    
+
     # Create table if it doesn't exist
     c.execute('''CREATE TABLE IF NOT EXISTS tweet_log
-                 (id INTEGER PRIMARY KEY, tweet_id TEXT, user_id TEXT, 
+                 (id INTEGER PRIMARY KEY, tweet_id TEXT, user_id TEXT,
                   created_at TIMESTAMP)''')
-    
+
     # Insert a row
-    c.execute("INSERT INTO tweet_log VALUES (NULL, ?, ?, ?)", 
+    c.execute("INSERT INTO tweet_log VALUES (NULL, ?, ?, ?)",
               (tweet_id, user_id, datetime.datetime.now()))
-    
+
     # Get count for current month
     first_day = datetime.datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     c.execute("SELECT COUNT(*) FROM tweet_log WHERE created_at >= ?", (first_day,))
     count = c.fetchone()[0]
-    
+
     conn.commit()
     conn.close()
-    
+
     return count, 1500 - count  # Return current count and remaining
 
 # After posting a tweet
@@ -138,12 +138,12 @@ Based on the [Twitter API documentation](https://docs.x.com/x-api/what-to-build)
 
 1. **Simple Bots**: Create bots that post scheduled or event-triggered content
 2. **Post Automation**: Schedule and automate posting for individual accounts
-3. **Cross-Platform Publishing**: Post to Twitter as part of a multi-platform publishing solution
-4. **Testing Integrations**: Test Twitter integration before upgrading to a paid tier
-5. **Login with X**: Authenticate users in your app using their Twitter accounts
+3. **Cross-Platform Publishing**: Post to 𝕏 as part of a multi-platform publishing solution
+4. **Testing Integrations**: Test 𝕏 integration before upgrading to a paid tier
+5. **Login with X**: Authenticate users in your app using their 𝕏 accounts
 
 ## Conclusion
 
-The Free Tier of Twitter's API is primarily designed for testing and limited write operations. While it provides a way to get started with the Twitter API, its limitations make it unsuitable for applications that require reading tweets, searching, or accessing user timelines at scale.
+The Free Tier of Twitter's API is primarily designed for testing and limited write operations. While it provides a way to get started with the 𝕏 API, its limitations make it unsuitable for applications that require reading tweets, searching, or accessing user timelines at scale.
 
 For development purposes, the Free Tier is sufficient to test authentication and basic posting functionality. However, for production applications that require more functionality, consider upgrading to the Basic or Pro tiers.

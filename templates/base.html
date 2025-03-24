@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}𝕏Pilot{% endblock %}</title>
+    <title>{% block title %}𝕏-Pilot{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
@@ -11,7 +11,7 @@
     <header>
         <nav>
             <div class="logo">
-                <a href="{{ url_for('main.index') }}">𝕏Pilot</a>
+                <a href="{{ url_for('main.index') }}">𝕏-Pilot</a>
             </div>
             <ul class="nav-links">
                 <li><a href="{{ url_for('main.index') }}">Home</a></li>
@@ -47,7 +47,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; {{ now.year }} 𝕏Pilot - A Tweepy Frontend</p>
+            <p>&copy; {{ now.year }} 𝕏-Pilot - A Tweepy Frontend</p>
         </div>
     </footer>
 

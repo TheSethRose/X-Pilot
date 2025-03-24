@@ -1,12 +1,12 @@
-# Tweepy for Twitter (𝕏) API v2 Documentation
+# Tweepy for 𝕏 (𝕏) API v2 Documentation
 
-Welcome to the comprehensive documentation for using Tweepy with the Twitter (𝕏) API v2. This documentation focuses specifically on the capabilities available with the Free 𝕏 API Plan.
+Welcome to the comprehensive documentation for using Tweepy with the 𝕏 (𝕏) API v2. This documentation focuses specifically on the capabilities available with the Free 𝕏 API Plan.
 
 ## Documentation Guides
 
 ### Core Guides
 
-- [Comprehensive API Overview](tweepy-v2-api-overview.md) - Complete overview of all Tweepy capabilities with Twitter API v2
+- [Comprehensive API Overview](tweepy-v2-api-overview.md) - Complete overview of all Tweepy capabilities with 𝕏 API v2
 - [Getting Started Guide](tweepy-v2-getting-started.md) - Quick start guide for setting up and using Tweepy
 - [Free Tier Limitations](tweepy-v2-free-tier-limitations.md) - Detailed breakdown of Free API tier limitations and capabilities
 
@@ -20,7 +20,7 @@ Welcome to the comprehensive documentation for using Tweepy with the Twitter (�
 
 ## Available Features in the Free 𝕏 API Plan
 
-The Free 𝕏 API Plan provides access to a limited subset of Twitter API v2 capabilities:
+The Free 𝕏 API Plan provides access to a limited subset of 𝕏 API v2 capabilities:
 
 - **Purpose**: For write-only use cases and testing the X API
 - **Rate Limits**: Low rate-limit access to v2 posts and media upload endpoints

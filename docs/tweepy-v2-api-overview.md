@@ -1,6 +1,6 @@
-# Tweepy for Twitter (𝕏) API v2: Comprehensive Overview
+# Tweepy for 𝕏 (𝕏) API v2: Comprehensive Overview
 
-This document provides a comprehensive overview of Tweepy's capabilities for interacting with Twitter (𝕏) API v2, focusing specifically on what's available with the Free 𝕏 API Plan.
+This document provides a comprehensive overview of Tweepy's capabilities for interacting with 𝕏 (𝕏) API v2, focusing specifically on what's available with the Free 𝕏 API Plan.
 
 ## Table of Contents
 
@@ -22,9 +22,9 @@ This document provides a comprehensive overview of Tweepy's capabilities for int
 
 ## Introduction
 
-Twitter's API v2 is the current version of the Twitter API, and it's accessible through Tweepy's `Client` and `AsyncClient` classes. As of April 2023, the Twitter API v1.1 is no longer accessible with Essential (free) access, meaning all free tier developers must use the v2 API.
+Twitter's API v2 is the current version of the 𝕏 API, and it's accessible through Tweepy's `Client` and `AsyncClient` classes. As of April 2023, the 𝕏 API v1.1 is no longer accessible with Essential (free) access, meaning all free tier developers must use the v2 API.
 
-Tweepy provides a Pythonic interface to the Twitter API v2, making it easier to interact with Twitter's endpoints while handling authentication, rate limiting, and pagination.
+Tweepy provides a Pythonic interface to the 𝕏 API v2, making it easier to interact with Twitter's endpoints while handling authentication, rate limiting, and pagination.
 
 ## Authentication
 
@@ -38,7 +38,7 @@ Twitter API v2 requires authentication to access its endpoints. For the Free �
 
 ### Authentication Methods
 
-Tweepy supports multiple authentication methods for the Twitter API v2:
+Tweepy supports multiple authentication methods for the 𝕏 API v2:
 
 1. **OAuth 2.0 Bearer Token (App-Only)** - Simplest method for read-only access:
    ```python
@@ -60,28 +60,28 @@ Tweepy supports multiple authentication methods for the Twitter API v2:
 3. **OAuth 2.0 Authorization Code Flow with PKCE** - For user context with OAuth 2.0:
    ```python
    import tweepy
-   
+
    # Set up OAuth 2.0 handler
    oauth2_user_handler = tweepy.OAuth2UserHandler(
        client_id="CLIENT_ID",
        redirect_uri="CALLBACK_URL",
        scope=["tweet.read", "users.read", "offline.access"],
    )
-   
+
    # Get authorization URL
    auth_url = oauth2_user_handler.get_authorization_url()
-   
+
    # After user authorizes, get the tokens from the callback
    response = oauth2_user_handler.fetch_token("AUTHORIZATION_RESPONSE_URL")
    access_token = response["access_token"]
-   
+
    # Use the access token
    client = tweepy.Client(access_token)
    ```
 
 ## Client vs AsyncClient
 
-Tweepy provides two main client classes for interacting with the Twitter API v2:
+Tweepy provides two main client classes for interacting with the 𝕏 API v2:
 
 1. **Client** - Synchronous client for regular Python code
 2. **AsyncClient** - Asynchronous client for use with `async`/`await` pattern
@@ -90,7 +90,7 @@ Both clients provide the same functionality, but `AsyncClient` is designed for a
 
 ## Available API Features
 
-The Free 𝕏 API Plan provides access to a subset of Twitter API v2 endpoints. Here's what you can access:
+The Free 𝕏 API Plan provides access to a subset of 𝕏 API v2 endpoints. Here's what you can access:
 
 ### Tweets
 
@@ -403,7 +403,7 @@ for response in tweepy.Paginator(client.get_users_tweets, user_id, max_results=1
 
 ## Rate Limits
 
-All Twitter API v2 endpoints have rate limits. The Free 𝕏 API Plan has stricter limits compared to paid tiers:
+All 𝕏 API v2 endpoints have rate limits. The Free 𝕏 API Plan has stricter limits compared to paid tiers:
 
 - Most read operations: 500-1500 requests per 15-minute window
 - Most write operations: 25-50 requests per 15-minute window
@@ -500,7 +500,7 @@ client = tweepy.Client(
 )
 
 # Post a tweet
-response = client.create_tweet(text="Hello, Twitter API v2 with Tweepy!")
+response = client.create_tweet(text="Hello, 𝕏 API v2 with Tweepy!")
 print(f"Tweet posted with ID: {response.data['id']}")
 ```
 
@@ -539,4 +539,4 @@ streaming_client.filter(
 
 ---
 
-This overview covers the main capabilities of Tweepy when working with Twitter API v2 on the Free 𝕏 API Plan. For more detailed information, refer to the [official Tweepy documentation](https://docs.tweepy.org/) and the [Twitter API v2 documentation](https://developer.twitter.com/en/docs/twitter-api).
+This overview covers the main capabilities of Tweepy when working with 𝕏 API v2 on the Free 𝕏 API Plan. For more detailed information, refer to the [official Tweepy documentation](https://docs.tweepy.org/) and the [Twitter API v2 documentation](https://developer.twitter.com/en/docs/twitter-api).

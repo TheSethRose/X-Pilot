@@ -1,8 +1,8 @@
-# Streaming with Tweepy for Twitter API v2
+# Streaming with Tweepy for 𝕏 API v2
 
-This guide covers how to use the streaming capabilities of Tweepy with the Twitter API v2, focusing on what's available with the Free 𝕏 API Plan.
+This guide covers how to use the streaming capabilities of Tweepy with the 𝕏 API v2, focusing on what's available with the Free 𝕏 API Plan.
 
-## Introduction to Twitter API v2 Streaming
+## Introduction to 𝕏 API v2 Streaming
 
 Twitter API v2 offers filtered stream access, which allows you to receive tweets in real-time that match specific rules you define. Tweepy provides a convenient interface for working with these streams through the `StreamingClient` class.
 
@@ -27,30 +27,30 @@ class MyStreamingClient(tweepy.StreamingClient):
         print(f"Text: {tweet.text}")
         print(f"Author ID: {tweet.author_id}")
         print("---")
-    
+
     def on_includes(self, includes):
         """Called when includes data is received"""
         if "users" in includes:
             for user in includes["users"]:
                 print(f"User: {user.username}")
-    
+
     def on_errors(self, errors):
         """Called when errors are received"""
         for error in errors:
             print(f"Error: {error}")
-    
+
     def on_connect(self):
         """Called when the connection is established"""
         print("Stream connected")
-    
+
     def on_disconnect(self):
         """Called when the connection is lost"""
         print("Stream disconnected")
-    
+
     def on_connection_error(self):
         """Called when a connection error occurs"""
         print("Connection error")
-    
+
     def on_request_error(self, status_code, response):
         """Called when a request error occurs"""
         print(f"Request error: {status_code}")
@@ -195,12 +195,12 @@ import tweepy
 class MyStreamingClient(tweepy.StreamingClient):
     def on_tweet(self, tweet):
         print(f"Tweet: {tweet.text}")
-    
+
     def on_includes(self, includes):
         if "users" in includes:
             for user in includes["users"]:
                 print(f"User: @{user.username}")
-    
+
     def on_matching_rules(self, matching_rules):
         for rule in matching_rules:
             print(f"Matched rule: {rule.tag if rule.tag else rule.id}")
@@ -233,7 +233,7 @@ import threading
 class MyStreamingClient(tweepy.StreamingClient):
     def on_tweet(self, tweet):
         print(f"Tweet received: {tweet.text}")
-    
+
     def on_exception(self, exception):
         print(f"Error: {exception}")
         return True  # Don't stop the stream on exception
@@ -269,10 +269,10 @@ class MyStreamingClient(tweepy.StreamingClient):
         self.max_retries = max_retries
         self.retry_delay = retry_delay
         self.retries = 0
-    
+
     def on_tweet(self, tweet):
         print(f"Tweet: {tweet.text}")
-    
+
     def on_connection_error(self):
         if self.retries < self.max_retries:
             self.retries += 1
@@ -284,7 +284,7 @@ class MyStreamingClient(tweepy.StreamingClient):
             print("Maximum retries reached. Stopping stream.")
             return False  # Stop retrying
         return True  # Continue retrying
-    
+
     def on_connect(self):
         print("Connected to stream")
         self.retries = 0
@@ -323,17 +323,17 @@ def process_tweets():
         try:
             # Get a tweet from the queue
             tweet = tweet_queue.get(timeout=60)
-            
+
             # Process the tweet
             print(f"Processing tweet: {tweet.id}")
             print(f"Text: {tweet.text}")
-            
+
             # Simulate processing time
             time.sleep(0.5)
-            
+
             # Mark the task as done
             tweet_queue.task_done()
-            
+
         except queue.Empty:
             print("No tweets received for 60 seconds")
             continue
@@ -377,37 +377,37 @@ if existing_rules.data:
 rules = [
     # Keyword matching
     tweepy.StreamRule("python", tag="python-keyword"),
-    
+
     # Multiple keywords (OR)
     tweepy.StreamRule("python OR javascript", tag="languages"),
-    
+
     # All keywords (AND)
     tweepy.StreamRule("python javascript", tag="both-languages"),
-    
+
     # Exact phrase
     tweepy.StreamRule('"machine learning"', tag="exact-phrase"),
-    
+
     # Exclude keyword
     tweepy.StreamRule("python -django", tag="python-not-django"),
-    
+
     # From a specific user
     tweepy.StreamRule("from:TwitterDev", tag="twitter-dev"),
-    
+
     # To a specific user
     tweepy.StreamRule("to:TwitterDev", tag="to-twitter-dev"),
-    
+
     # Tweets containing a URL
     tweepy.StreamRule("url:github", tag="github-links"),
-    
+
     # Tweets with hashtag
     tweepy.StreamRule("#python", tag="python-hashtag"),
-    
+
     # Tweets with media
     tweepy.StreamRule("has:media python", tag="python-with-media"),
-    
+
     # Retweets
     tweepy.StreamRule("is:retweet python", tag="python-retweets"),
-    
+
     # Complex combination
     tweepy.StreamRule('python (flask OR django) -"web scraping" has:links', tag="python-web-frameworks-with-links")
 ]

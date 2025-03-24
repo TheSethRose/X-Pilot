@@ -1,6 +1,6 @@
-# Working with Users in Tweepy for Twitter API v2
+# Working with Users in Tweepy for 𝕏 API v2
 
-This guide covers how to work with user data using Tweepy and the Twitter API v2, focusing on the capabilities available with the Free 𝕏 API Plan.
+This guide covers how to work with user data using Tweepy and the 𝕏 API v2, focusing on the capabilities available with the Free 𝕏 API Plan.
 
 ## Retrieving User Information
 
@@ -163,7 +163,7 @@ for user in followers.data:
 # For paginating through all followers
 print("Paginating through all followers:")
 for response in tweepy.Paginator(
-    client.get_users_followers, 
+    client.get_users_followers,
     id="12345678901234567890",
     max_results=100,
     limit=5  # Limit to 5 pages (500 followers)
@@ -310,7 +310,7 @@ for tweet in mentions.data:
     # Find the author
     author = next((user for user in mentions.includes["users"] if user.id == tweet.author_id), None)
     username = author.username if author else "unknown"
-    
+
     print(f"@{username}: {tweet.text}")
     print(f"Date: {tweet.created_at}")
     print("---")
@@ -320,7 +320,7 @@ for tweet in mentions.data:
 
 ### Search for Users by Username
 
-Note: The Twitter API v2 does not provide a direct endpoint for user search. For finding users by username, you'll need to use the `get_user` method with exact usernames.
+Note: The 𝕏 API v2 does not provide a direct endpoint for user search. For finding users by username, you'll need to use the `get_user` method with exact usernames.
 
 ```python
 import tweepy
@@ -345,7 +345,7 @@ for username in usernames:
 
 ## Working with User Fields
 
-The Twitter API v2 allows you to request specific fields for user data. Here's a list of the most useful fields:
+The 𝕏 API v2 allows you to request specific fields for user data. Here's a list of the most useful fields:
 
 ```python
 import tweepy

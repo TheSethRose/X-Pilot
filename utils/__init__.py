@@ -1,3 +1,3 @@
 """
-Utility functions and modules for the 𝕏Pilot application.
+Utility functions and modules for the 𝕏-Pilot application.
 """

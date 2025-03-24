@@ -2,19 +2,31 @@ import os
 from flask import Flask, render_template
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 
 from app.models import db
 from utils.logging_config import setup_logging
 
 def create_app(test_config=None):
     """Create and configure the Flask application using the factory pattern."""
-    app = Flask(__name__, instance_relative_config=True)
+    # Use absolute path for template and static folders
+    template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
+    static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
+
+    app = Flask(__name__,
+                instance_relative_config=True,
+                template_folder=template_dir,
+                static_folder=static_dir)
 
     # Load the default configuration
     app.config.from_mapping(
         SECRET_KEY=os.getenv('SECRET_KEY', 'dev'),
         SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL', 'sqlite:///twikit.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        TWITTER_CONSUMER_KEY=os.getenv('CONSUMER_KEY'),
+        TWITTER_CONSUMER_SECRET=os.getenv('CONSUMER_SECRET'),
+        TWITTER_ACCESS_TOKEN=os.getenv('ACCESS_TOKEN'),
+        TWITTER_ACCESS_TOKEN_SECRET=os.getenv('ACCESS_TOKEN_SECRET')
     )
 
     if test_config is None:
@@ -34,9 +46,12 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate = Migrate(app, db)
 
+    # Initialize CSRF protection
+    csrf = CSRFProtect(app)
+
     # Setup login manager
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = 'auth.login'  # type: ignore[assignment]
     login_manager.init_app(app)
 
     @login_manager.user_loader
@@ -48,15 +63,19 @@ def create_app(test_config=None):
     setup_logging(app)
 
     # Register blueprints
-    from app.routes.auth import auth_bp
-    from app.routes.main import main_bp
-    from app.routes.tweets import tweets_bp
-    from app.routes.users import users_bp
+    try:
+        from app.routes.auth import auth_bp
+        from app.routes.main import main_bp
+        from app.routes.tweets import tweets_bp
+        from app.routes.users import users_bp
 
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(main_bp)
-    app.register_blueprint(tweets_bp)
-    app.register_blueprint(users_bp)
+        app.register_blueprint(auth_bp)
+        app.register_blueprint(main_bp)
+        app.register_blueprint(tweets_bp)
+        app.register_blueprint(users_bp)
+    except ImportError as e:
+        app.logger.warning(f"Could not import blueprints: {e}")
+        app.logger.warning("Continuing without all blueprints...")
 
     # Register error handlers
     @app.errorhandler(404)
