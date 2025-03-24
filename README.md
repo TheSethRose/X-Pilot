@@ -1,6 +1,6 @@
 # 𝕏-Pilot
 
-A frontend interface for managing 𝕏 (Twitter) accounts within the limitations of the Free 𝕏 API tier, powered by Tweepy.
+A frontend interface for managing 𝕏 (Twitter) accounts within the limitations of the Free 𝕏 API tier, powered by Tweepy. Fully compatible with X API v2.
 
 ## Screenshot
 
@@ -8,15 +8,17 @@ A frontend interface for managing 𝕏 (Twitter) accounts within the limitations
 
 ## Features
 
-- Authentication management for 𝕏 API
-- Tweet posting, deletion, and scheduling
+- Authentication management for 𝕏 API v2
+- Tweet posting, deletion, and scheduling (within free tier limits)
+- Support for dynamic character limits based on user verification status
 - User relationship management (follow/unfollow, block/mute)
-- User information and metrics viewing
+- User information and metrics viewing with verification status
 - Tweet engagement (like, retweet, bookmark)
 - List management
 - Streaming capabilities
 - Basic analytics
 - Automated actions
+- Quota tracking for X API free tier usage
 
 ## Getting Started
 
@@ -85,8 +87,13 @@ X-Pilot/
 ├── utils/                # Utility scripts
 ├── .env                  # Environment variables (create this)
 ├── README.md             # Project documentation
+├── todo.md               # Project roadmap and milestone tracking
 └── requirements.txt      # Project dependencies
 ```
+
+## Development Status
+
+This project is under active development. Check [todo.md](todo.md) for current progress and upcoming features.
 
 ## License
 

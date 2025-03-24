@@ -274,10 +274,18 @@ We've made significant progress on our initial goals:
 - ✓ Implemented user profile management
 - ✓ Built user search functionality
 - ✓ Enhanced token management UI
+- ✓ Migrated to X API v2 endpoints for core functionality
+- ✓ Enhanced user verification status display
+- ✓ Improved error handling for API calls
+- ✓ Added X API free tier compatibility
+- ✓ Updated tweet character limits based on user status
 
 Our next focus is on:
-1. Complete media upload functionality
-2. Implement reply, like, and retweet features
+1. Complete media upload functionality for tweets
+2. Implement reply, like, and retweet features within free tier limits
+3. Enhance follower management with pagination support
+4. Optimize API usage to stay within free tier rate limits
+5. Improve scheduled tweets functionality
 
 ## Sprint Planning Template
 
@@ -306,22 +314,33 @@ Our next focus is on:
   - [x] OAuth flow working
   - [x] Token storage secure
   - [x] Login/logout functional
+  - [x] Compatible with X API v2
 
 - [x] Basic Tweet Management
   - [x] Can post tweets
   - [x] Can delete tweets
   - [x] Quota tracker working
+  - [x] Dynamic character limits based on user verification status
 
 - [x] User Profile Viewing
   - [x] Can view own profile
   - [x] Can view followers/following
   - [x] Can follow/unfollow users
+  - [x] Display verification status properly
 
 - [x] Functional Dashboard
   - [x] Shows relevant metrics
   - [x] Provides navigation to all MVP features
   - [x] Responsive design works on desktop and mobile
   - [x] Dark/light mode implemented
+
+## X API Free Tier Optimization
+
+- [x] Implement quota tracking to stay within 1,500 posts/month limit
+- [x] Optimize API calls to minimize rate limit usage
+- [x] Handle API limitations gracefully with user feedback
+- [ ] Implement caching strategies for frequently accessed data
+- [ ] Add user warnings when approaching quota limits
 
 ## Final Release Checklist
 
